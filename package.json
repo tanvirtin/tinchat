@@ -1,0 +1,21 @@
+{
+  "name": "chatapp",
+  "version": "1.0.0",
+  "description": "Chat application created with express, socket.io, mongodb, cookie-parser, body-parser and pug template engine, which is very user friendly.",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.11",
+    "cookie-parser": "^1.4.3",
+    "pug": "^2.0.0-beta6",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Md. Tanvir Islam",
+  "license": "ISC"
+}

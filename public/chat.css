@@ -1,0 +1,93 @@
+/* Purpose: This file is a static server which is responsible for the GET and POST requests made by the user. It listens on port 2406. */
+
+/* Author: Md. Tanvir Islam */
+
+/*
+	Style for the body
+*/
+body {
+	background-color: #3E3B3B;
+}
+/*
+	Style for the main headline
+*/
+#headline {
+	color: white;
+	text-shadow: -1px 0 black, 0 2px black, 1px 0 black, 0 1px black;
+}
+/*
+	Style for div which displays the introduction message
+*/
+#intro {
+	background-image: linear-gradient(180deg, #3C3D40, #CACDD7);
+	border-width: 5px;
+	border-style: groove;
+	border-color: #C2C1D6;
+	margin: 0 auto;
+	text-align: center;
+	width: 500px;
+	border-radius: 12px; /* makes edges smoooooth */
+}
+/*
+	Style for chatlog 
+*/
+#chatLog {
+	font-size: 96%;
+	font-family: "Arial";
+	width: 99.7%;
+	height: 100%;
+}
+/*
+	Stlye for the input text 
+*/
+#inputText {
+	border-width: 2px;
+	border-style: groove;
+	border-color: #C2C1D6;
+	border-radius: 7px;
+	font-size: 96%;
+	font-family: "Arial";
+	width: 99.8%;
+}
+/*
+	Style for the chat log div
+*/
+#chatLogDiv {	
+	border-width: 2px;
+	border-style: groove;
+	border-color: #C2C1D6;
+	border-radius: 7px;
+	width: 90%; /* 90% of the content div which is parent*/
+	height: 100%;
+	/*
+		float: left;
+		automatically places this div on the left
+		any div after this will be placed automatically on the
+		right
+	 */
+	float: left;
+}	
+/*
+	Style for the user list div
+*/
+#userListDiv {	
+	border-width: 2px;
+	border-style: groove;
+	border-color: #C2C1D6;
+	border-radius: 7px;
+	background-color: white;
+	color: black;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 0px white;
+	height: 100%;
+	overflow: auto;
+	/* Doesnt have a width property as it is automatically
+	   set to 10%
+	*/
+}
+/*
+	Style for the main div which holds everything in place
+*/
+#contents {	
+	width: 100%;
+	height: 380px;
+}
