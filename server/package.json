@@ -1,8 +1,8 @@
 {
     "name": "tinchat",
     "version": "0.0.1",
-    "description": "",
-    "author": "",
+    "description": "Chat application",
+    "author": "Md Tanvir Islam",
     "license": "MIT",
     "scripts": {
         "build": "rimraf dist && tsc -p tsconfig.build.json",
@@ -22,6 +22,7 @@
         "@nestjs/common": "^6.0.0",
         "@nestjs/core": "^6.0.0",
         "@nestjs/platform-express": "^6.0.0",
+        "dotenv": "^8.1.0",
         "reflect-metadata": "^0.1.12",
         "rimraf": "^2.6.2",
         "rxjs": "^6.3.3"

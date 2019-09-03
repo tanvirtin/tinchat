@@ -1,4 +1,9 @@
 {
+    "useTabs": false,
+    "tabWidth": 4,
     "singleQuote": true,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "singleQuate": true,
+    "bracketSpacing": true,
+    "arrowParents": "avoid"
 }
