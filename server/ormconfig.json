@@ -1,0 +1,11 @@
+{
+    "type": "postgres",
+    "host": "192.168.99.100",
+    "port": "5432",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "synchronize": true,
+    "logging": true,
+    "entities": ["./src/**/*.entity.ts", "./dist/**/*.entity.js"]
+}
