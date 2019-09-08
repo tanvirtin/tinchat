@@ -38,7 +38,7 @@ export class UserEntity {
     async hashPassword() {
         this.password = await bcrypt.hash(this.password, 10);
     }
-
+    // This method works as a type converter, where UserEntity is converted into UserResponseDTO.
     toResponseObject(showToken: boolean = true): UserResponseDTO {
         const { id, created, username, token } = this;
         const responseObject: UserResponseDTO = { id, created, username };
@@ -48,8 +48,8 @@ export class UserEntity {
         return responseObject;
     }
 
-    async comparePassword(attemp: string) {
-        return await bcrypt.compare(attemp, this.password);
+    async comparePassword(attempt: string) {
+        return await bcrypt.compare(attempt, this.password);
     }
 
     private get token() {
