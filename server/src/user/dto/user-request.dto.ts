@@ -2,9 +2,9 @@ import { IsNotEmpty } from 'class-validator';
 
 /**
  * @class
- * Interface class for user data object.
+ * Class represents user's post data object received from the user.
  */
-export class UserDTO {
+export class UserRequestDTO {
     @IsNotEmpty()
     username: string;
 

@@ -8,7 +8,7 @@ import {
 
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { UserRO } from './user.ro';
+import { UserResponseDTO } from './dto';
 
 /**
  * @class
@@ -17,9 +17,11 @@ import { UserRO } from './user.ro';
  */
 @Entity('user')
 export class UserEntity {
+    // Automatically NestJS generated id.
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    // Automatically NestJS generated date.
     @CreateDateColumn()
     created: Date;
 
@@ -37,9 +39,9 @@ export class UserEntity {
         this.password = await bcrypt.hash(this.password, 10);
     }
 
-    toResponseObject(showToken: boolean = true): UserRO {
+    toResponseObject(showToken: boolean = true): UserResponseDTO {
         const { id, created, username, token } = this;
-        const responseObject: UserRO = { id, created, username };
+        const responseObject: UserResponseDTO = { id, created, username };
         if (showToken) {
             responseObject.token = token;
         }

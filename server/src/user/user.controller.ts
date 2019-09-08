@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDTO } from './user.dto';
+import { UserRequestDTO } from './dto';
 
 /**
  * @class
@@ -17,13 +17,13 @@ export class UserController {
 
     @Post('login')
     @UsePipes(new ValidationPipe())
-    login(@Body() data: UserDTO) {
+    login(@Body() data: UserRequestDTO) {
         return this.userService.login(data);
     }
 
     @Post('register')
     @UsePipes(new ValidationPipe())
-    register(@Body() data: UserDTO) {
+    register(@Body() data: UserRequestDTO) {
         return this.userService.register(data);
     }
 }
