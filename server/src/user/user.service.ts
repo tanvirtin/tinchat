@@ -10,6 +10,7 @@ import { UserRequestDTO, UserResponseDTO } from './dto';
  */
 @Injectable()
 export class UserService {
+    // Dependency Injection of userEntity collection inside this service class.
     constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>) {}
 
     async showAll(): Promise<UserResponseDTO[]> {
