@@ -7,5 +7,5 @@
     "database": "postgres",
     "synchronize": true,
     "logging": true,
-    "entities": ["./src/**/*.entity.ts", "./dist/**/*.entity.js"]
+    "entities": ["./src/**/*.entity.js", "./dist/**/*.entity.js"]
 }
