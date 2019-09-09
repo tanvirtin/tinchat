@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRequestDTO } from './dto';
+import { UserRequestDTO, UserResponseDTO } from './dto';
 import { AuthGuard } from '../shared/auth.guard';
 
 /**
@@ -13,19 +13,19 @@ export class UserController {
 
     @Get('api/users')
     @UseGuards(new AuthGuard())
-    showAlUsers() {
+    async showAlUsers(): Promise<UserResponseDTO[]> {
         return this.userService.showAll();
     }
 
     @Post('login')
     @UsePipes(new ValidationPipe())
-    login(@Body() data: UserRequestDTO) {
+    async login(@Body() data: UserRequestDTO): Promise<UserResponseDTO> {
         return this.userService.login(data);
     }
 
     @Post('register')
     @UsePipes(new ValidationPipe())
-    register(@Body() data: UserRequestDTO) {
+    async register(@Body() data: UserRequestDTO): Promise<UserResponseDTO> {
         return this.userService.register(data);
     }
 }

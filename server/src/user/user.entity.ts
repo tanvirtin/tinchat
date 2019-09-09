@@ -52,7 +52,7 @@ export class UserEntity {
         return await bcrypt.compare(attempt, this.password);
     }
 
-    private get token() {
+    private get token(): string {
         const { id, username } = this;
         return jwt.sign({ id, username }, process.env.SECRET, { expiresIn: '7d' });
     }
