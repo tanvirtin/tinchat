@@ -11,12 +11,9 @@ const userResponseValidation = body => {
     assert.equal('password' in body, false);
 };
 
-const authenticationValidation = (body, username, token = false) => {
+const authenticationValidation = (body, username) => {
     assert.equal(body.username === username, true);
     assert.equal('token' in body, true);
-    if (token) {
-        assert.equal(body.token, token);
-    }
 };
 
 describe('User Module', () => {
@@ -35,19 +32,19 @@ describe('User Module', () => {
             .expect(201);
         userResponseValidation(res.body);
         authenticationValidation(res.body, username);
-        token = res.body.token;
     });
 
     it('Login', async () => {
         const res = await request(app)
-            .post('/login')
-            .send({
-                username,
-                password,
-            })
-            .expect(201);
+        .post('/login')
+        .send({
+            username,
+            password,
+        })
+        .expect(201);
         userResponseValidation(res.body);
-        authenticationValidation(res.body, username, token);
+        authenticationValidation(res.body, username);
+        token = res.body.token;
     });
 
     it('Get all users', async () => {
