@@ -23,7 +23,7 @@ export class UserEntity {
 
     // Automatically NestJS generated date.
     @CreateDateColumn()
-    created: Date;
+    createdDate: Date;
 
     @Column({
         type: 'text',
@@ -40,8 +40,8 @@ export class UserEntity {
     }
     // This method works as a type converter, where UserEntity is converted into UserResponseDTO.
     toResponseObject(showToken: boolean = true): UserResponseDTO {
-        const { id, created, username, token } = this;
-        const responseObject: UserResponseDTO = { id, created, username };
+        const { id, createdDate, username, token } = this;
+        const responseObject: UserResponseDTO = { id, createdDate, username };
         if (showToken) {
             responseObject.token = token;
         }

@@ -5,7 +5,7 @@
 export class UserResponseDTO {
     id: string;
     username: string;
-    created: Date;
+    createdDate: Date;
     // ? means token is optional
     token?: string;
 }

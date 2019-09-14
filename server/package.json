@@ -27,6 +27,7 @@
         "class-transformer": "^0.2.3",
         "class-validator": "^0.10.0",
         "dotenv": "^8.1.0",
+        "faker": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
         "pg": "^7.12.1",
         "reflect-metadata": "^0.1.12",
@@ -58,12 +59,11 @@
             "json",
             "ts"
         ],
-        "rootDir": "src",
-        "testRegex": ".spec.ts$",
+        "rootDir": ".",
+        "testEnvironment": "node",
+        "testRegex": ".e2e-spec.ts$",
         "transform": {
             "^.+\\.(t|j)s$": "ts-jest"
-        },
-        "coverageDirectory": "../coverage",
-        "testEnvironment": "node"
+        }
     }
 }
