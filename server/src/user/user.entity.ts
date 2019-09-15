@@ -30,10 +30,16 @@ export class UserEntity {
         type: 'text',
         unique: true,
     })
-    username: string;
+    email: string;
 
     @Column('text')
     password: string;
+
+    @Column('text')
+    firstName: string;
+
+    @Column('text')
+    lastName: string;
 
     @BeforeInsert()
     async hashPassword() {
@@ -41,8 +47,8 @@ export class UserEntity {
     }
     // This method works as a type converter, where UserEntity is converted into UserResponseDTO.
     toResponseObject(createToken: boolean = true): UserResponseDTO {
-        const { id, createdDate, username } = this;
-        const responseObject: UserResponseDTO = { id, createdDate, username };
+        const { id, createdDate, email, firstName, lastName } = this;
+        const responseObject: UserResponseDTO = { id, createdDate, email, firstName, lastName };
         if (createToken) {
             responseObject.token = this.createToken();
         }
@@ -54,7 +60,7 @@ export class UserEntity {
     }
 
     private createToken(): string {
-        const { id, username } = this;
-        return jwt.sign({ id, username }, process.env.SECRET, { expiresIn: `${process.env.JWT_EXPIRATION}s` });
+        const { id, email } = this;
+        return jwt.sign({ id, email }, process.env.SECRET, { expiresIn: `${process.env.JWT_EXPIRATION}s` });
     }
 }

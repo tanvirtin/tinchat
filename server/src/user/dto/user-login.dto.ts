@@ -1,12 +1,13 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 
 /**
  * @class
  * Class represents user's post data object received from the user.
  */
-export class UserRequestDTO {
+export class UserLoginDTO {
     @IsNotEmpty()
-    username: string;
+    @IsEmail()
+    email: string;
 
     @IsNotEmpty()
     password: string;
