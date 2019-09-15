@@ -4,5 +4,11 @@ docker-up:
 docker-down:
 	docker-compose down
 
+start-server-dev:
+	cd server/ && yarn start:dev
+
 start-server:
-	cd server/ && yarn start
+	cd server/ && yarn start:dev
+
+lint:
+	cd server/ && yarn lint

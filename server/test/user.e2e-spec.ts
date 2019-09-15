@@ -7,47 +7,65 @@ const app = 'http://localhost:4000';
 const userResponseValidation = body => {
     assert.equal('id' in body, true);
     assert.equal('createdDate' in body, true);
-    assert.equal('username' in body, true);
+    assert.equal('email' in body, true);
+    assert.equal('firstName' in body, true);
+    assert.equal('lastName' in body, true);
     assert.equal('password' in body, false);
 };
 
-const authenticationValidation = (res, username) => {
-    assert.equal(res.body.username === username, true);
+const authenticationValidation = (res, email) => {
+    assert.equal(res.body.email === email, true);
     assert.equal('authorization' in res.header, true);
 };
 
 describe('User Module', () => {
-    let username;
+    let email;
     let password;
     let token;
 
     it('Register a user', async () => {
-        username = faker.name.findName();
+        email = faker.internet.email();
         password = faker.internet.password();
         const res = await request(app)
             .post('/register')
             .send({
-                username,
+                email,
                 password,
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
             })
             .expect(201);
         userResponseValidation(res.body);
-        authenticationValidation(res, username);
+        authenticationValidation(res, email);
+    });
+
+    it('Register a user with invalid email', async () => {
+        request(app)
+            .post('/register')
+            .send({
+                email: 'Invalid',
+                password:  faker.internet.password(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+            })
+            .expect(400);
     });
 
     it('Register a user with invalid data', async () => {
         request(app)
             .post('/register')
-            .send({ username })
+            .send({ email })
             .expect(400);
     });
 
-    it('Register a user with duplicate username', async () => {
+    it('Register a user with duplicate email', async () => {
         request(app)
             .post('/register')
             .send({
-                username,
+                email,
                 password,
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
             })
             .expect(400);
     });
@@ -56,7 +74,7 @@ describe('User Module', () => {
         request(app)
             .post('/login')
             .send({
-                username,
+                email,
                 password: 'Invalid Password',
             })
             .expect(400);
@@ -73,12 +91,12 @@ describe('User Module', () => {
         const res = await request(app)
             .post('/login')
             .send({
-                username,
+                email,
                 password,
             })
             .expect(201);
         userResponseValidation(res.body);
-        authenticationValidation(res, username);
+        authenticationValidation(res, email);
         token = res.header.authorization;
     });
 
@@ -99,7 +117,7 @@ describe('User Module', () => {
     it('Logout', async () => {
         request(app)
             .post('/logout')
-            .send({ username })
+            .send({ email })
             .set('Authorization', token)
             .expect(201);
     });
@@ -107,7 +125,7 @@ describe('User Module', () => {
     it('Logout without authorization', async () => {
         request(app)
             .post('/logout')
-            .send({ username })
+            .send({ email })
             .expect(403);
     });
 });

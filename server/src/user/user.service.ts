@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus, CACHE_MANAGER, Inject } from '@n
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
-import { UserRequestDTO, UserResponseDTO } from './dto';
+import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
 import { UserLogoutDTO } from './dto/user-logout.dto';
 
 /**
@@ -22,34 +22,36 @@ export class UserService {
         return users.map(user => user.toResponseObject(false));
     }
 
-    async login(data: UserRequestDTO): Promise<UserResponseDTO> {
-        const { username, password } = data;
-        const user = await this.userRepository.findOne({ where: { username }});
+    async login(data: UserLoginDTO): Promise<UserResponseDTO> {
+        const { email, password } = data;
+        const user = await this.userRepository.findOne({ where: { email }});
         if (!user || !await user.comparePassword(password)) {
-            throw new HttpException('Invalid username/password', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Invalid email/password', HttpStatus.BAD_REQUEST);
         }
         const userResponseObject = user.toResponseObject();
+        const { id, token } = userResponseObject;
         // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(username, userResponseObject.token, { ttl: process.env.JWT_EXPIRATION });
+        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
         return userResponseObject;
     }
 
-    async register(data: UserRequestDTO): Promise<UserResponseDTO> {
-        const { username } = data;
-        let user = await this.userRepository.findOne({ where: { username } });
+    async register(data: UserRegisterDTO): Promise<UserResponseDTO> {
+        const { email } = data;
+        let user = await this.userRepository.findOne({ where: { email } });
         if (user) {
             throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
         }
         user = this.userRepository.create(data);
         await this.userRepository.save(user);
         const userResponseObject = user.toResponseObject();
+        const { id, token } = userResponseObject;
         // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(username, userResponseObject.token, { ttl: process.env.JWT_EXPIRATION });
+        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
         return userResponseObject;
     }
 
     logout(data: UserLogoutDTO): void {
-        const { username } = data;
-        this.cacheManager.del(username);
+        const { email } = data;
+        this.cacheManager.del(email);
     }
 }
