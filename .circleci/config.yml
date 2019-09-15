@@ -7,4 +7,3 @@ jobs:
     steps:
       - checkout
       - run: yarn install
-      - run: make lint
