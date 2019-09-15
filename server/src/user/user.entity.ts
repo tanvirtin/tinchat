@@ -40,10 +40,12 @@ export class UserEntity {
     }
     // This method works as a type converter, where UserEntity is converted into UserResponseDTO.
     toResponseObject(showToken: boolean = true): UserResponseDTO {
-        const { id, createdDate, username, token } = this;
+        // Destructing token automatically invokes the token() method. This means that
+        // Everytime toResponseObject is called the token is regenerated everytime.
+        const { id, createdDate, username } = this;
         const responseObject: UserResponseDTO = { id, createdDate, username };
         if (showToken) {
-            responseObject.token = token;
+            responseObject.token = this.token;
         }
         return responseObject;
     }
