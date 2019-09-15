@@ -39,13 +39,11 @@ export class UserEntity {
         this.password = await bcrypt.hash(this.password, 10);
     }
     // This method works as a type converter, where UserEntity is converted into UserResponseDTO.
-    toResponseObject(showToken: boolean = true): UserResponseDTO {
-        // Destructing token automatically invokes the token() method. This means that
-        // Everytime toResponseObject is called the token is regenerated everytime.
+    toResponseObject(createToken: boolean = true): UserResponseDTO {
         const { id, createdDate, username } = this;
         const responseObject: UserResponseDTO = { id, createdDate, username };
-        if (showToken) {
-            responseObject.token = this.token;
+        if (createToken) {
+            responseObject.token = this.createToken();
         }
         return responseObject;
     }
@@ -54,7 +52,7 @@ export class UserEntity {
         return await bcrypt.compare(attempt, this.password);
     }
 
-    private get token(): string {
+    private createToken(): string {
         const { id, username } = this;
         return jwt.sign({ id, username }, process.env.SECRET, { expiresIn: '7d' });
     }
