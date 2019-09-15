@@ -20,7 +20,8 @@ describe('User Module', () => {
     let username;
     let password;
     let token;
-    it('Register', async () => {
+
+    it('Register a user', async () => {
         username = faker.name.findName();
         password = faker.internet.password();
         const res = await request(app)
@@ -34,14 +35,48 @@ describe('User Module', () => {
         authenticationValidation(res, username);
     });
 
-    it('Login', async () => {
+    it('Register a user with invalid data', async () => {
+        request(app)
+            .post('/register')
+            .send({ username })
+            .expect(400);
+    });
+
+    it('Register a user with duplicate username', async () => {
+        request(app)
+            .post('/register')
+            .send({
+                username,
+                password,
+            })
+            .expect(400);
+    });
+
+    it('Login a user with invalid password', async () => {
+        request(app)
+            .post('/login')
+            .send({
+                username,
+                password: 'Invalid Password',
+            })
+            .expect(400);
+    });
+
+    it('Login a user with invalid data', async () => {
+        request(app)
+            .post('/login')
+            .send({ password })
+            .expect(400);
+    });
+
+    it('Login a user', async () => {
         const res = await request(app)
-        .post('/login')
-        .send({
-            username,
-            password,
-        })
-        .expect(201);
+            .post('/login')
+            .send({
+                username,
+                password,
+            })
+            .expect(201);
         userResponseValidation(res.body);
         authenticationValidation(res, username);
         token = res.header.authorization;
@@ -55,22 +90,22 @@ describe('User Module', () => {
         res.body.forEach(userResponseValidation);
     });
 
-    it('Get all users without token', async () => {
+    it('Get all users without authorization', async () => {
         request(app)
             .get('/api/users')
             .expect(403);
     });
 
     it('Logout', async () => {
-        const res = await request(app)
+        request(app)
             .post('/logout')
             .send({ username })
             .set('Authorization', token)
             .expect(201);
     });
 
-    it('Logout without token', async () => {
-        const res = await request(app)
+    it('Logout without authorization', async () => {
+        request(app)
             .post('/logout')
             .send({ username })
             .expect(403);
