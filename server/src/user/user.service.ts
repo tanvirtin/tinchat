@@ -1,8 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, CACHE_MANAGER, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserRequestDTO, UserResponseDTO } from './dto';
+import { UserLogoutDTO } from './dto/user-logout.dto';
 
 /**
  * @class
@@ -11,7 +12,10 @@ import { UserRequestDTO, UserResponseDTO } from './dto';
 @Injectable()
 export class UserService {
     // Dependency Injection of userEntity collection inside this service class.
-    constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private cacheManager,
+        @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+    ) {}
 
     async showAll(): Promise<UserResponseDTO[]> {
         const users = await this.userRepository.find();
@@ -24,7 +28,10 @@ export class UserService {
         if (!user || !await user.comparePassword(password)) {
             throw new HttpException('Invalid username/password', HttpStatus.BAD_REQUEST);
         }
-        return user.toResponseObject();
+        const userResponseObject = user.toResponseObject();
+        // No need to await for this asynchronous function to finish.
+        this.cacheManager.set(username, userResponseObject.token, { ttl: process.env.JWT_EXPIRATION });
+        return userResponseObject;
     }
 
     async register(data: UserRequestDTO): Promise<UserResponseDTO> {
@@ -35,6 +42,14 @@ export class UserService {
         }
         user = this.userRepository.create(data);
         await this.userRepository.save(user);
-        return user.toResponseObject();
+        const userResponseObject = user.toResponseObject();
+        // No need to await for this asynchronous function to finish.
+        this.cacheManager.set(username, userResponseObject.token, { ttl: process.env.JWT_EXPIRATION });
+        return userResponseObject;
+    }
+
+    logout(data: UserLogoutDTO): void {
+        const { username } = data;
+        this.cacheManager.del(username);
     }
 }

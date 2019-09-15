@@ -29,6 +29,7 @@
         "dotenv": "^8.1.0",
         "faker": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
+        "nestjs-redis": "^1.2.3",
         "pg": "^7.12.1",
         "reflect-metadata": "^0.1.12",
         "rimraf": "^2.6.2",

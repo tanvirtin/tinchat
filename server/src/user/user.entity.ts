@@ -25,6 +25,7 @@ export class UserEntity {
     @CreateDateColumn()
     createdDate: Date;
 
+    // Every row in the table must have a unique value for this column.
     @Column({
         type: 'text',
         unique: true,
@@ -54,6 +55,6 @@ export class UserEntity {
 
     private createToken(): string {
         const { id, username } = this;
-        return jwt.sign({ id, username }, process.env.SECRET, { expiresIn: '7d' });
+        return jwt.sign({ id, username }, process.env.SECRET, { expiresIn: `${process.env.JWT_EXPIRATION}s` });
     }
 }

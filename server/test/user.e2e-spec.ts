@@ -54,4 +54,25 @@ describe('User Module', () => {
             .expect(200);
         res.body.forEach(userResponseValidation);
     });
+
+    it('Get all users without token', async () => {
+        request(app)
+            .get('/api/users')
+            .expect(403);
+    });
+
+    it('Logout', async () => {
+        const res = await request(app)
+            .post('/logout')
+            .send({ username })
+            .set('Authorization', token)
+            .expect(201);
+    });
+
+    it('Logout without token', async () => {
+        const res = await request(app)
+            .post('/logout')
+            .send({ username })
+            .expect(403);
+    });
 });

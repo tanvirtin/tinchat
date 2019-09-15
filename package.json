@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "cache-manager": "^2.10.0"
+  }
+}
