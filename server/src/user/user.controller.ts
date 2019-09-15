@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { UserService } from './user.service';
 import { UserRequestDTO, UserResponseDTO } from './dto';
 import { AuthGuard } from '../shared/auth.guard';
@@ -19,13 +20,19 @@ export class UserController {
 
     @Post('login')
     @UsePipes(new ValidationPipe())
-    async login(@Body() data: UserRequestDTO): Promise<UserResponseDTO> {
-        return this.userService.login(data);
+    async login(@Body() data: UserRequestDTO, @Res() res: Response) {
+        const userResponseData = await this.userService.login(data);
+        res.set('Authorization', 'Bearer ' + userResponseData.token);
+        delete userResponseData.token;
+        res.send(userResponseData);
     }
 
     @Post('register')
     @UsePipes(new ValidationPipe())
-    async register(@Body() data: UserRequestDTO): Promise<UserResponseDTO> {
-        return this.userService.register(data);
+    async register(@Body() data: UserRequestDTO, @Res() res: Response) {
+        const userResponseData = await this.userService.register(data);
+        res.set('Authorization', 'Bearer ' + userResponseData.token);
+        delete userResponseData.token;
+        res.send(userResponseData);
     }
 }

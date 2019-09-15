@@ -3,7 +3,9 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+    // Method that gets triggered when AuthGuard (Middleware) gets invoked.
     async canActivate(context: ExecutionContext): Promise<boolean> {
+        // Extract the request object from the execution context.
         const request = context.switchToHttp().getRequest();
         return this.authorizeRequest(request);
     }
