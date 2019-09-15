@@ -5,5 +5,5 @@ jobs:
       - image: circleci/node:7.10
     working_directory: ~/repo
     steps:
-	  - checkout
+      - checkout
       - run: yarn install
