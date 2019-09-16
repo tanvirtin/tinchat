@@ -1,6 +1,6 @@
 /**
  * @class
- * Class represent's response object returned by the server to the user.
+ * Class represent's response object returned by the server to the user upon registration/loging in.
  */
 export class UserResponseDTO {
     id: string;
