@@ -32,7 +32,9 @@ export class AuthGuard implements CanActivate {
         }
         const token = authFragments[1];
         try {
-            const decodedToken = jwt.verify(token, process.env.SECRET);
+            const decodedToken: any = jwt.verify(token, process.env.SECRET);
+            // Auth guard here is also working as a neat middleware.
+            request.body.from = decodedToken.email;
             return !!decodedToken;
         } catch (err) {
             return false;

@@ -35,9 +35,9 @@ export class UserService {
             throw new HttpException('Invalid email/password', HttpStatus.BAD_REQUEST);
         }
         const userResponseObject = user.toResponseObject();
-        const { id, token } = userResponseObject;
-        // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
+        const { token } = userResponseObject;
+        // We don't need to wait we want this to be asynchronous background process.
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION });
         return userResponseObject;
     }
 
@@ -50,9 +50,9 @@ export class UserService {
         user = this.userRepository.create(data);
         await this.userRepository.save(user);
         const userResponseObject = user.toResponseObject();
-        const { id, token } = userResponseObject;
-        // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
+        const { token } = userResponseObject;
+        // We don't need to wait we want this to be asynchronous background process.
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION });
         return userResponseObject;
     }
 

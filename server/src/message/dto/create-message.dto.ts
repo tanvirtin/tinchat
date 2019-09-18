@@ -7,7 +7,7 @@ import { IsNotEmpty, IsEmail } from 'class-validator';
 export class CreateMessageDTO {
     @IsNotEmpty()
     @IsEmail()
-    from: string;
+    from?: string;
 
     @IsNotEmpty()
     @IsEmail()
