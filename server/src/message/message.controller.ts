@@ -30,12 +30,12 @@ export class MessageController {
         return this.messageService.createMessage(data);
     }
 
-    @Get('api/messages')
+    @Get('api/conversation')
     @UseGuards(new AuthGuard())
     async index(@Query('with') convoWith: string, @Query('page') page: number = 0,
                 @Query('limit') limit: number = 10,
                 @Req() req: Request) {
         limit = limit > 100 ? 100 : limit;
-        return await this.messageService.getMessages(convoWith, req.body.from, { page, limit });
+        return await this.messageService.getConversation(convoWith, req.body.from, { page, limit });
     }
 }

@@ -49,13 +49,19 @@ export class MessageService {
         return messageResponseObject;
     }
 
-    async getMessages(convoWith, user, options: IPaginationOptions): Promise<Pagination<MessageEntity>> {
+    async getConversation(convoWith, user, options: IPaginationOptions): Promise<Pagination<MessageEntity>> {
         const queryBuilder = this.messageRepository.createQueryBuilder('message');
         // All combination of from and to in of a message and when ordered by created date
         // gives you the entire conversation that belongs to two users.
-        queryBuilder
-            .where('message.from = :from or message.from = :to and message.to = :to or message.to = :from', { from: user, to: convoWith })
-            .orderBy('message.createdDate', 'DESC');
+        if (convoWith !== user) {
+            queryBuilder
+                .where('message.from = :from and message.to = :to or message.from = :to and message.to = :from', { from: user, to: convoWith })
+                .orderBy('message.createdDate', 'DESC');
+        } else {
+            queryBuilder
+                .where('message.from = :from and message.to = :to', { from: user, to: convoWith })
+                .orderBy('message.createdDate', 'DESC');
+        }
         return paginate<MessageEntity>(queryBuilder, options);
     }
 }
