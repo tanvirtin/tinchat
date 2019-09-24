@@ -44,6 +44,7 @@ export class MessageService {
         if (token) {
             await this.gateway.wss.emit(token, messageResponseObject);
             message.delivered = true;
+            message.seen = false;
         }
         await this.messageRepository.save(message);
         return messageResponseObject;

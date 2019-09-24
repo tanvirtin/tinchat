@@ -9,6 +9,23 @@ services:
       - pgdata:/var/lib/postgresql/data
       - pgconf:/etc/postgresql
       - pglog:/var/log/postgresql
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.1
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
 volumes:
   pgdata:
     driver: local
@@ -16,3 +33,8 @@ volumes:
     driver: local
   pglog:
     driver: local
+  esdata:
+    driver: local
+
+networks:
+  esnet:
