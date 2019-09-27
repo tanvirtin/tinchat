@@ -12,3 +12,13 @@ start-server:
 
 lint:
 	cd server/ && yarn lint
+
+delete-database-entries:
+	. server/script/delete_database_entries.sh
+
+delete-es-indices:
+	. server/script/delete_es_indices.sh
+
+breakdown:
+	$(MAKE) delete-database-entries
+	$(MAKE) delete-es-indices
