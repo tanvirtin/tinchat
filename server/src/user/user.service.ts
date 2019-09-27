@@ -39,7 +39,7 @@ export class UserService {
         const userResponseObject = user.toResponseObject();
         const { token } = userResponseObject;
         // We don't need to wait we want this to be asynchronous background process.
-        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION });
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
         return userResponseObject;
     }
 
@@ -54,7 +54,7 @@ export class UserService {
         const userResponseObject = user.toResponseObject();
         const { token } = userResponseObject;
         // We don't need to wait we want this to be asynchronous background process.
-        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION });
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
         await this.esService.index('user', userResponseObject);
         return userResponseObject;
     }
