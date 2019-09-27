@@ -1,8 +1,17 @@
-import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards, Res } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Get,
+    Body,
+    UsePipes,
+    ValidationPipe,
+    UseGuards,
+    Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from './user.service';
 import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
-import { AuthGuard } from '../shared/auth.guard';
+import { AuthGuard } from '../shared/guards/auth.guard';
 import { UserLogoutDTO } from './dto/user-logout.dto';
 
 /**

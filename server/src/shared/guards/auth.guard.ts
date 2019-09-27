@@ -1,6 +1,18 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import {
+    Injectable,
+    CanActivate,
+    ExecutionContext,
+    HttpException,
+    HttpStatus,
+} from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 
+/**
+ * @class
+ * This class is responsible for dictating user permissions for accessing server resources.
+ * Only user with valid JSON web token can access specific routes. In your controller
+ * add the following decorator '@UseGuards(new AuthGuard())' on top of the routes you wish to restrict.
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
     // Method that gets triggered when AuthGuard (Middleware) gets invoked.
@@ -20,7 +32,9 @@ export class AuthGuard implements CanActivate {
         }
         const token = authFragments[1];
         try {
-            const decodedToken = jwt.verify(token, process.env.SECRET);
+            const decodedToken: any = jwt.verify(token, process.env.SECRET || 'tinchat');
+            // Auth guard here is also working as a neat middleware.
+            request.body.from = decodedToken.email;
             return !!decodedToken;
         } catch (err) {
             return false;

@@ -61,6 +61,6 @@ export class UserEntity {
 
     private createToken(): string {
         const { id, email } = this;
-        return jwt.sign({ id, email }, process.env.SECRET, { expiresIn: `${process.env.JWT_EXPIRATION}s` });
+        return jwt.sign({ id, email }, process.env.SECRET || 'tinchat', { expiresIn: `${process.env.JWT_EXPIRATION || 604800}s` });
     }
 }

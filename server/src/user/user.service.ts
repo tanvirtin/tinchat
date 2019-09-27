@@ -1,9 +1,16 @@
-import { Injectable, HttpException, HttpStatus, CACHE_MANAGER, Inject } from '@nestjs/common';
+import {
+    Injectable,
+    HttpException,
+    HttpStatus,
+    CACHE_MANAGER,
+    Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
 import { UserLogoutDTO } from './dto/user-logout.dto';
+import { ElasticsearchService } from '../shared/services/elasticsearch.service';
 
 /**
  * @class
@@ -15,6 +22,7 @@ export class UserService {
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager,
         @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+        private esService: ElasticsearchService,
     ) {}
 
     async showAll(): Promise<UserResponseDTO[]> {
@@ -29,9 +37,9 @@ export class UserService {
             throw new HttpException('Invalid email/password', HttpStatus.BAD_REQUEST);
         }
         const userResponseObject = user.toResponseObject();
-        const { id, token } = userResponseObject;
-        // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
+        const { token } = userResponseObject;
+        // We don't need to wait we want this to be asynchronous background process.
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
         return userResponseObject;
     }
 
@@ -44,9 +52,12 @@ export class UserService {
         user = this.userRepository.create(data);
         await this.userRepository.save(user);
         const userResponseObject = user.toResponseObject();
-        const { id, token } = userResponseObject;
-        // No need to await for this asynchronous function to finish.
-        this.cacheManager.set(id, token, { ttl: process.env.JWT_EXPIRATION });
+        const { token } = userResponseObject;
+        // We don't need to wait we want this to be asynchronous background process.
+        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
+        const userIndexDocument: object = { ...userResponseObject };
+        delete userIndexDocument['token'];
+        this.esService.index('user', userIndexDocument);
         return userResponseObject;
     }
 
