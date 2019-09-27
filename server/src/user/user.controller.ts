@@ -11,7 +11,7 @@ import {
 import { Response } from 'express';
 import { UserService } from './user.service';
 import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
-import { AuthGuard } from '../shared/auth.guard';
+import { AuthGuard } from '../shared/guards/auth.guard';
 import { UserLogoutDTO } from './dto/user-logout.dto';
 
 /**

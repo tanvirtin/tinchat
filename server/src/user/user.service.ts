@@ -10,6 +10,7 @@ import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
 import { UserLogoutDTO } from './dto/user-logout.dto';
+import { ElasticsearchService } from '../shared/services/elasticsearch.service';
 
 /**
  * @class
@@ -21,6 +22,7 @@ export class UserService {
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager,
         @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+        private esService: ElasticsearchService,
     ) {}
 
     async showAll(): Promise<UserResponseDTO[]> {
@@ -53,6 +55,7 @@ export class UserService {
         const { token } = userResponseObject;
         // We don't need to wait we want this to be asynchronous background process.
         this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION });
+        await this.esService.index('user', userResponseObject);
         return userResponseObject;
     }
 

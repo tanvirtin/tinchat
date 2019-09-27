@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateMessageDTO } from './dto';
-import { AuthGuard } from '../shared/auth.guard';
+import { AuthGuard } from '../shared/guards/auth.guard';
 import { MessageService } from './message.service';
 import { MessageResponseDTO } from './dto';
 

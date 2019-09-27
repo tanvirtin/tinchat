@@ -3,12 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
+import { ElasticsearchService } from '../shared/services/elasticsearch.service';
 
 /** NestJS Boilerplate Code */
 /** Register your modules here */
 @Module({
     imports: [TypeOrmModule.forFeature([UserEntity]), CacheModule.register()],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, ElasticsearchService],
 })
 export class UserModule { }
