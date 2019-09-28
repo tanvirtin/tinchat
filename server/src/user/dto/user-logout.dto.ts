@@ -7,5 +7,5 @@ import { IsNotEmpty, IsEmail } from 'class-validator';
 export class UserLogoutDTO {
     @IsNotEmpty()
     @IsEmail()
-    email: string;
+    from: string;
 }

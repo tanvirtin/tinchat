@@ -23,7 +23,7 @@ export class UserController {
     constructor(private userService: UserService) {}
 
     @Get('api/users')
-    @UseGuards(new AuthGuard())
+    @UseGuards(AuthGuard)
     async showAlUsers(): Promise<UserResponseDTO[]> {
         return this.userService.showAll();
     }
@@ -45,7 +45,7 @@ export class UserController {
     }
 
     @Post('logout')
-    @UseGuards(new AuthGuard())
+    @UseGuards(AuthGuard)
     @UsePipes(new ValidationPipe())
     logoutt(@Body() data: UserLogoutDTO): void {
         this.userService.logout(data);
