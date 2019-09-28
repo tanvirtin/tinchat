@@ -55,8 +55,10 @@ export class UserService {
         const { token } = userResponseObject;
         // We don't need to wait we want this to be asynchronous background process.
         this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
-        const userIndexDocument: object = { ...userResponseObject };
-        delete userIndexDocument['token'];
+        const userIndexDocument = { ...userResponseObject };
+        if (userIndexDocument) {
+            delete userIndexDocument.token;
+        }
         this.esService.index('user', userIndexDocument);
         return userResponseObject;
     }

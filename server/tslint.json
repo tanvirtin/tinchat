@@ -29,7 +29,8 @@
         ],
         "arrow-parens": false,
         "object-literal-sort-keys": false,
-        "await-promise": true
+        "await-promise": true,
+        "no-string-literal": false
     },
     "rulesDirectory": []
 }
