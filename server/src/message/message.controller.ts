@@ -24,14 +24,14 @@ export class MessageController {
     constructor(private messageService: MessageService) {}
 
     @Post('api/message')
-    @UseGuards(new AuthGuard())
+    @UseGuards(AuthGuard)
     @UsePipes(new ValidationPipe())
     async createMessage(@Body() data: CreateMessageDTO): Promise<MessageResponseDTO> {
         return this.messageService.createMessage(data);
     }
 
     @Get('api/conversation')
-    @UseGuards(new AuthGuard())
+    @UseGuards(AuthGuard)
     async index(@Query('with') convoWith: string, @Query('page') page: number = 0,
                 @Query('limit') limit: number = 10,
                 @Req() req: Request) {

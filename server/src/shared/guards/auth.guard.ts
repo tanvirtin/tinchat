@@ -4,6 +4,8 @@ import {
     ExecutionContext,
     HttpException,
     HttpStatus,
+    Inject,
+    CACHE_MANAGER,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 
@@ -15,6 +17,9 @@ import * as jwt from 'jsonwebtoken';
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
+    // NOTE** - It is extremely important to make sure that all modules
+    // that use this AuthGuard must have CacheManager registered in it's imports.
+    constructor(@Inject(CACHE_MANAGER) private cacheManager) {}
     // Method that gets triggered when AuthGuard (Middleware) gets invoked.
     async canActivate(context: ExecutionContext): Promise<boolean> {
         // Extract the request object from the execution context.
@@ -35,7 +40,7 @@ export class AuthGuard implements CanActivate {
             const decodedToken: any = jwt.verify(token, process.env.SECRET || 'tinchat');
             // Auth guard here is also working as a neat middleware.
             request.body.from = decodedToken.email;
-            return !!decodedToken;
+            return !!decodedToken && this.cacheManager.get(decodedToken.email);
         } catch (err) {
             return false;
         }

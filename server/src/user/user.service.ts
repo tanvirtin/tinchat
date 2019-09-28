@@ -64,7 +64,7 @@ export class UserService {
     }
 
     logout(data: UserLogoutDTO): void {
-        const { email } = data;
-        this.cacheManager.del(email);
+        const { from } = data;
+        this.cacheManager.del(from);
     }
 }

@@ -4,7 +4,7 @@ import { SearchService } from './search.service';
 import { QueryDTO } from './dto/query.dto';
 
 @Controller('api/search')
-@UseGuards(new AuthGuard())
+@UseGuards(AuthGuard)
 export class SearchController {
     constructor(private searchService: SearchService) {}
 
