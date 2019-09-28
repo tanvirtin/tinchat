@@ -10,7 +10,7 @@ import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserRegisterDTO, UserLoginDTO, UserResponseDTO } from './dto';
 import { UserLogoutDTO } from './dto/user-logout.dto';
-import { ElasticsearchService } from '../shared/services/elasticsearch.service';
+import { SearchService } from '../search/search.service';
 
 /**
  * @class
@@ -22,7 +22,7 @@ export class UserService {
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager,
         @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
-        private esService: ElasticsearchService,
+        private searchService: SearchService,
     ) {}
 
     async showAll(): Promise<UserResponseDTO[]> {
@@ -59,7 +59,7 @@ export class UserService {
         if (userIndexDocument) {
             delete userIndexDocument.token;
         }
-        this.esService.index('user', userIndexDocument);
+        this.searchService.index('user', userIndexDocument);
         return userResponseObject;
     }
 
