@@ -8,7 +8,7 @@ start-server-dev:
 	cd server/ && yarn start:dev
 
 start-server:
-	cd server/ && yarn start:dev
+	cd server/ && yarn start
 
 lint:
 	cd server/ && yarn lint
