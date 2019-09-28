@@ -23,8 +23,6 @@ socket-io-test.html
 *.launch
 .settings/
 *.sublime-workspace
-/server/dist
-/server/node_modules
 
 # IDE - VSCode
 .vscode/*
@@ -35,3 +33,7 @@ socket-io-test.html
 
 # env
 /server/.env
+
+/server/dist
+/server/node_modules
+/web-client/node_modules
