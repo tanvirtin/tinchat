@@ -10,6 +10,9 @@ start-server-dev:
 start-server:
 	cd server/ && yarn start
 
+start-web-client:
+	cd web-client/ && yarn start
+
 lint:
 	cd server/ && yarn lint
 
