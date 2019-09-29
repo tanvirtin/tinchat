@@ -8,7 +8,7 @@ export default wrapper(props => {
     return (
         <div>
             <div>
-                { translations.getTranslation('Home') }
+                { translations.getTranslation('home') }
             </div>
         </div>
     );
