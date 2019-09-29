@@ -22,6 +22,10 @@ class Translations {
             return this.translations[this.type][section][key];
         } else if (section) {
             key = section;
+            const translation = this.translations[this.type][key];
+            if (translation) {
+                return translation;
+            }
             for (const sectionName in this.translations[this.type]) {
                 const section = this.translations[this.type][sectionName];
                 if (section && key in section) {
