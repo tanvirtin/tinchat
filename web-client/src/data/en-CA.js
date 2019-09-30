@@ -1,4 +1,7 @@
 export default {
+    home: {
+        logout: 'Logout',
+    },
     login: {
         email: 'Email',
         password: 'Password',

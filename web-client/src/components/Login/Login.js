@@ -16,7 +16,7 @@ export default wrapper(props => {
                             <Form.Control type = 'email' placeholder = {translations.getTranslation('enterEmail')} />
                         </Form.Group>
                         <Form.Group controlId = 'password'>
-                            <Form.Label>{translations.getTranslation('login', 'password')}</Form.Label>
+                            <Form.Label>{translations.getTranslation('password')}</Form.Label>
                             <Form.Control type = 'password' placeholder = {translations.getTranslation('password')} />
                         </Form.Group>
                         <Button className = 'login-button' variant = 'primary' type = 'submit'>

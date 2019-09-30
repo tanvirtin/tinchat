@@ -1,0 +1,27 @@
+.home-container {
+    margin-top: 4vh;
+    width: 95vw;
+    margin-left: 2.5vw;
+}
+
+.row-container {
+    height: 93vh;
+}
+
+.user-container {
+    border-right: 1px solid #9e9e9e;
+}
+
+.profile-tab {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #9e9e9e;
+    height: 8vh;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
