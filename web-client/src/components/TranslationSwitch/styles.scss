@@ -1,0 +1,15 @@
+.translation-switch-container {
+    position: fixed;
+    display: flex;
+    font-size: 12px;
+    bottom: 0;
+    right: 0;
+    padding-right: 1vw;
+    z-index: 3;
+}
+
+.translation-switch {
+    z-index: 3;
+    margin-left: 1vw;
+    margin-top: -1vh;
+}

@@ -1,3 +1,7 @@
+compile:
+	docker build -t tinchat .
+	docker tag tinchat:latest tinchat:server
+
 docker-up:
 	docker-compose up -d
 

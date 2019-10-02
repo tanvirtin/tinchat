@@ -1,5 +1,13 @@
 version: "3.2"
 services:
+  server:
+    image: tinchat:server
+    env_file:
+      - server/.env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 8000:8000
   db:
     image: postgres
     restart: unless-stopped

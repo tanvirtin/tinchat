@@ -23,10 +23,6 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-html {
-	overflow: scroll;
-	scrollbar-width: none;
-}
 
 ::-webkit-scrollbar {
 	width: 0px;
@@ -34,7 +30,8 @@ html {
 }
 
 body {
-	line-height: 1;
+    line-height: 1;
+    background-image: url('./assets/background.png')
 }
 
 ol, ul {
