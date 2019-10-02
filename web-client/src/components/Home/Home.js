@@ -8,6 +8,7 @@ import './styles.scss';
 
 export default wrapper(props => {
     const { translations } = props;
+    const chatSelected = true;
     return (
         <Container className = 'home-container'>
             <Row className = 'row-container'>
@@ -27,14 +28,25 @@ export default wrapper(props => {
                     </Row>
                     <Row className = 'search'>
                         <Col>
-                            <Input size = 'mini' fluid icon = 'search' placeholder = 'Search...' />
+                            <Input size = 'mini' fluid icon = 'search' placeholder = {translations.getTranslation('searchPlaceholder')} />
                         </Col>
                     </Row>
                 </Col>
                 <Col className = 'message-container' xs = {9}>
-                    <Row className = 'profile-tab chat-profile-tab'>
-                        <Col> <Avatar/> </Col>
-                    </Row>
+                    {
+                        chatSelected &&
+                            <Row className = 'profile-tab chat-profile-tab'>
+                                <Col> <Avatar/> </Col>
+                            </Row>
+                    }
+                    {
+                        chatSelected &&
+                            <Row className = 'send-message'>
+                                <Col>
+                                    <Input className = 'message-input' size = 'mini' placeholder = {translations.getTranslation('typeMessagePlaceholder')} />
+                                </Col>
+                            </Row>
+                    }
                 </Col>
             </Row>
         </Container>

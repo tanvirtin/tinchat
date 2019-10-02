@@ -3,6 +3,7 @@
     -webkit-box-shadow: -1px 2px 21px -4px rgba(0,0,0,0.65); 
     box-shadow: -1px 2px 21px -4px rgba(0,0,0,0.65);
     min-width: 500px;
+    background-color: white;
 }
 
 .row-container {
@@ -10,7 +11,7 @@
 }
 
 .user-container {
-    border-right: 1px solid #9e9e9e;
+    border-right: 1px solid #e8e8e8;
 }
 
 .profile-tab {
@@ -18,11 +19,33 @@
     align-items: center;
     background-color: #f7f7f7;
     height: 8vh;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .search {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 1vh;
+    padding-bottom: 1vh;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.message-container {
+    position: relative;
+    background-image: url('../../assets/chat-background.png')
+}
+
+.send-message {
+    position: absolute;
+    bottom: 0;
+    background-color: #f7f7f7;
+    height: 8vh;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+}
+
+.message-input {
+    margin-top: 1.4vh;
+    width: 100%;
 }

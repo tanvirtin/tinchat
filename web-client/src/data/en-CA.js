@@ -1,6 +1,8 @@
 export default {
     home: {
         logout: 'Logout',
+        typeMessagePlaceholder: 'Type a message',
+        searchPlaceholder: 'Search...',
     },
     login: {
         email: 'Email',
