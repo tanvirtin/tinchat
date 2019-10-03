@@ -62,7 +62,7 @@ export default wrapper(props => {
                     <UserCard />
                     <UserCard />
                 </Col>
-                <Col className = 'pre-scrollable message-container' xs = {9}>
+                <Col className = {`${chatSelected ? 'pre-scrollable ' : ''}message-container`} xs = {9}>
                     {
                         chatSelected &&
                             <Row className = 'profile-tab chat-profile-tab'>
