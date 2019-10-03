@@ -7,11 +7,7 @@
 }
 
 .row-container {
-    height: 97vh;
-}
-
-.user-container {
-    border-right: 1px solid #e8e8e8;
+    height: 90vh;
 }
 
 .profile-tab {
@@ -31,9 +27,15 @@
     border-bottom: 1px solid #e8e8e8;
 }
 
+.user-container {
+    border-right: 1px solid #e8e8e8;
+    max-height: 90vh !important;
+}
+
 .message-container {
     position: relative;
-    background-image: url('../../assets/chat-background.png')
+    background-image: url('../../assets/chat-background.png');
+    max-height: none !important;
 }
 
 .send-message {
