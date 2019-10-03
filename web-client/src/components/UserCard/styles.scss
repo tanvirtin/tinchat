@@ -1,0 +1,29 @@
+
+.user-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.user-card {
+    min-width: 200px;
+    display: flex;
+    flex-direction: row;
+}
+
+.user-card-text-group {
+    margin-left: 30px;
+}
+
+.user-card-text-group h1 {
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.user-card-text-group p {
+    font-size: 11px;
+    color: #a6a6a6;
+}

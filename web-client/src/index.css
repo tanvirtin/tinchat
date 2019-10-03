@@ -31,7 +31,8 @@ footer, header, hgroup, menu, nav, section {
 
 body {
     line-height: 1;
-    background-image: url('./assets/background.png')
+    background-image: url('./assets/background.png');
+    overflow: hidden;
 }
 
 ol, ul {
