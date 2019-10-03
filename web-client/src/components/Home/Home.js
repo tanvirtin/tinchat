@@ -62,11 +62,48 @@ export default wrapper(props => {
                     <UserCard />
                     <UserCard />
                 </Col>
-                <Col className = {`${chatSelected ? 'pre-scrollable ' : ''}message-container`} xs = {9}>
+                <Col className = 'message-container' xs = {9}>
                     {
                         chatSelected &&
                             <Row className = 'profile-tab chat-profile-tab'>
                                 <Col> <Avatar/> </Col>
+                            </Row>
+                    }
+                    {
+                        chatSelected &&
+                            <Row className = 'pre-scrollable messages'>
+                                <Col>
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                    <UserCard />
+                                </Col>
                             </Row>
                     }
                     {
