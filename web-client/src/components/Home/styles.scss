@@ -33,21 +33,32 @@
 }
 
 .message-container {
-    position: relative;
+    /** Display flex, and set the direciton as column */
+    display: flex;
+    flex-direction: column;
     background-image: url('../../assets/chat-background.png');
-    max-height: none !important;
+    overflow: hidden;
+    max-height: 90vh !important;
 }
 
 .send-message {
-    position: absolute;
-    bottom: 0;
     background-color: #f7f7f7;
     height: 60px;
-    width: 100%;
     border-top: 1px solid #e8e8e8;
 }
 
 .message-input {
     margin-top: 10px;
     width: 100%;
+}
+
+.messages {
+    /*
+        Flex auto, will automatically allocate all the free space that is available in the container
+        to this element. This will cause the send-message div to be automatically placed on the bottom,
+        as all items in a flex container has a default flex property of 1.
+    */
+    flex: auto;
+    max-height: none !important;
+    height: 500px;
 }
