@@ -42,11 +42,6 @@
 }
 
 .send-message {
-    /**
-        When flex: none this element will have no flex property, meaning it depends on other elements
-        inside the container to dictate it's flex property.
-    */
-    flex: none;
     background-color: #f7f7f7;
     height: 60px;
     border-top: 1px solid #e8e8e8;
@@ -60,7 +55,8 @@
 .messages {
     /*
         Flex auto, will automatically allocate all the free space that is available in the container
-        to this element. This will cause the send-message div to be automatically placed on the bottom.
+        to this element. This will cause the send-message div to be automatically placed on the bottom,
+        as all items in a flex container has a default flex property of 1.
     */
     flex: auto;
     max-height: none !important;

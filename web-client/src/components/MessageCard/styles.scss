@@ -1,0 +1,33 @@
+.message-card-right {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: 40px;
+}
+
+.message-card-left {
+    max-width: 300px;
+    margin-left: 30px;
+}
+
+.message-card {
+    min-width: 130px;
+    background-color: #fafafa;
+    display: inline-block;
+    border: 1px solid #e6e6e6;
+    margin: 10px;
+    margin-top: 20px !important;
+    padding: 10px;
+    border-radius: 5%;
+}
+
+.message-card h6 {
+    font-size: 13px;
+}
+
+.message-card p {
+    font-size: 12px;
+}
+
+.message-user {
+    margin-bottom: 10px;
+}

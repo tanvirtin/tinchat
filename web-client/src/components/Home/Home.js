@@ -4,6 +4,7 @@ import wrapper from '../../utils/stateless-component-wrapper';
 import { Input, Dropdown } from 'semantic-ui-react';
 import Avatar from '../Avatar';
 import UserCard from '../UserCard';
+import MessageCard from '../MessageCard';
 
 import './styles.scss';
 
@@ -73,36 +74,11 @@ export default wrapper(props => {
                         chatSelected &&
                             <Row className = 'pre-scrollable messages'>
                                 <Col>
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
-                                    <UserCard />
+                                    <MessageCard message = 'hello' username = 'User A' right/>
+                                    <MessageCard message = 'sup' username = 'User B'/>
+                                    <MessageCard message = 'not much' username = 'User A' right/>
+                                    <MessageCard message = 'aight' username = 'User B'/>
+                                    <MessageCard message = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' username = 'User A' right/>
                                 </Col>
                             </Row>
                     }
