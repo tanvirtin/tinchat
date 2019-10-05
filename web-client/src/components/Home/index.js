@@ -6,19 +6,23 @@ import MessageCard from '../MessageCard';
 class HomeContainer extends Component {
     constructor (props) {
         super(props);
-        this.state = {
-            messages: [],
-        };
+        this.state = { messages: [] };
+    }
+    setMessage () {
+        this.setState({ messages: this.state.messages }, () => {
+            this.messageRef.current.scrollIntoView();
+        });
     }
     onSendMessage (event) {
         if (event.key === 'Enter') {
             const { currentTarget: { value } } = event;
             if (value) {
+                this.messageRef = React.createRef();
                 event.currentTarget.value = '';
                 this.state.messages.push(
-                    <MessageCard key = {Math.random()} message = {value} username = 'Current User'/>,
+                    <MessageCard messageRef = {this.messageRef} key = {Math.random()} message = {value} username = 'Current User'/>,
                 );
-                this.setState({ messages: this.state.messages });
+                this.setMessage();
             }
         }
     }
