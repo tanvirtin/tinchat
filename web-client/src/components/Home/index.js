@@ -2,14 +2,23 @@ import React, { Component } from 'react';
 import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
+import moment from 'moment';
 
 class HomeContainer extends Component {
     constructor (props) {
         super(props);
-        this.state = { messages: [] };
+        this.state = { messages: [
+            <MessageCard
+                key = {Math.random()}
+                message = {'I am starting this conversation'}
+                timestamp = {moment().format('hh:mm a')}
+                left
+            />,
+        ] };
     }
     setMessage () {
         this.setState({ messages: this.state.messages }, () => {
+            // Scroll into view will use the scroll bar of the nearest parent which is scrollable.
             this.messageRef.current.scrollIntoView();
         });
     }
@@ -20,7 +29,12 @@ class HomeContainer extends Component {
                 this.messageRef = React.createRef();
                 event.currentTarget.value = '';
                 this.state.messages.push(
-                    <MessageCard messageRef = {this.messageRef} key = {Math.random()} message = {value} username = 'Current User'/>,
+                    <MessageCard
+                        messageRef = {this.messageRef}
+                        key = {Math.random()}
+                        message = {value}
+                        timestamp = {moment().format('hh:mm a')}
+                    />,
                 );
                 this.setMessage();
             }
