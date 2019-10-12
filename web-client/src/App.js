@@ -1,28 +1,16 @@
 import React from 'react';
 import { Provider } from 'mobx-react';
-import Translations from './store/Translations';
+import { TranslationsStore, AuthenticationStore } from './store';
+import { BrowserRouter as Router } from 'react-router-dom';
 import TranslationSwitch from './components/TranslationSwitch';
-import Login from './components/Login';
-import Register from './components/Register';
-import Home from './components/Home';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Routes from './Routes';
 
 export default () => {
     return (
         <Router>
-            <Provider translations = { new Translations() }>
+            <Provider authentication = { new AuthenticationStore() } translations = { new TranslationsStore() }>
                 <TranslationSwitch />
-                <Switch>
-                    <Route path="/login">
-                        <Login />
-                    </Route>
-                    <Route path="/register">
-                        <Register />
-                    </Route>
-                    <Route path="/">
-                        <Home />
-                    </Route>
-                </Switch>
+                <Routes />
             </Provider>
         </Router>
     );

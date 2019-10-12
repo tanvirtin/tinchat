@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
-import wrapper from '../../utils/stateless-component-wrapper';
+import Utils from '../../utils';
 import { Input, Dropdown } from 'semantic-ui-react';
 import Avatar from '../Avatar';
 
 import './styles.scss';
 
-export default wrapper(props => {
+export default Utils.decorateWithMobX(props => {
     const { translations } = props;
     const chatSelected = true;
     return (

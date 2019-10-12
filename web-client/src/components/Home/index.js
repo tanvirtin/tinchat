@@ -34,6 +34,7 @@ class HomeContainer extends Component {
                         key = {Math.random()}
                         message = {value}
                         timestamp = {moment().format('hh:mm a')}
+                        right
                     />,
                 );
                 this.setMessage();
