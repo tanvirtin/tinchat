@@ -1,7 +1,7 @@
 import { restApiEndpoint } from '../config.json';
 import axios from 'axios';
 
-export default class {
+export class AuthenticationService {
     static parseFormData (form) {
         const { elements } = form;
         const data = {};
@@ -13,12 +13,13 @@ export default class {
         }
         return data;
     }
-    static async login (form) {
+    static login (form) {
         const formData = this.parseFormData(form);
-        try {
-            return await axios.post(`${restApiEndpoint}/login`, formData);
-        } catch (err) {
-            throw err;
-        }
+        return axios.post(`${restApiEndpoint}/login`, formData);
+    }
+
+    static register (form) {
+        const formData = this.parseFormData(form);
+        return axios.post(`${restApiEndpoint}/register`, formData);
     }
 };

@@ -6,7 +6,7 @@ import {
 import enCA from '../data/en-CA';
 import frCA from '../data/fr-CA';
 
-class Translations {
+export class TranslationsStore {
     @observable type = 'en-CA';
     @observable translations = {
         'en-CA': enCA,
@@ -42,5 +42,3 @@ class Translations {
         return missingTranslation;
     }
 }
-
-export default Translations;

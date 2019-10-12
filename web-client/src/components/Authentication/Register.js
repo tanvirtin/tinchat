@@ -36,7 +36,7 @@ export default Utils.decorateWithMobX(props => {
                         <Button type = 'submit' loading = {props.formSubmitted} primary>
                             {translations.getTranslation('submit')}
                         </Button>
-                        <Form.Text className="text-muted login-link">
+                        <Form.Text className="text-muted authentication-link">
                             <a href='/login'>{translations.getTranslation('gotoLogin')}</a>
                         </Form.Text>
                     </Form>
