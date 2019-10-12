@@ -1,16 +1,22 @@
 import React from 'react';
-import wrapper from '../../utils/stateless-component-wrapper';
-import { Container, Col, Row, Form, Button } from 'react-bootstrap';
+import Utils from '../../utils';
+import { Container, Col, Row, Form } from 'react-bootstrap';
+import { Button } from 'semantic-ui-react';
+import Notify from '../Notify';
 
 import './styles.scss';
 
-export default wrapper(props => {
+export default Utils.decorateWithMobX(props => {
     const { translations } = props;
     return (
         <Container>
+            <Notify
+                show = {props.showNotify}
+                message = {props.message}
+            />
             <Row className = 'justify-content-md-center login-container'>
                 <Col md = {4}>
-                    <Form>
+                    <Form onSubmit = {props.onSubmit}>
                         <Form.Group controlId = 'email'>
                             <Form.Label>{translations.getTranslation('email')}</Form.Label>
                             <Form.Control type = 'email' placeholder = {translations.getTranslation('enterEmail')} />
@@ -19,7 +25,7 @@ export default wrapper(props => {
                             <Form.Label>{translations.getTranslation('password')}</Form.Label>
                             <Form.Control type = 'password' placeholder = {translations.getTranslation('password')} />
                         </Form.Group>
-                        <Button className = 'login-button' variant = 'primary' type = 'submit'>
+                        <Button type = 'submit' loading = {props.formSubmitted} primary>
                             {translations.getTranslation('submit')}
                         </Button>
                         <Form.Text className="text-muted registration-link">

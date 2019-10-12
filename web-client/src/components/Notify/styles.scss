@@ -1,0 +1,8 @@
+.notify {
+    position: absolute !important;
+    left: 50%;
+    top: 40px;
+    // This will always make sure the div is positioned in the center despite it's content
+    transform: translate(-50%);
+    z-index: 10 !important;
+}

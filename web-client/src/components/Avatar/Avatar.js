@@ -1,9 +1,9 @@
 import React from 'react';
-import wrapper from '../../utils/stateless-component-wrapper';
+import Utils from '../../utils';
 
 import './styles.scss';
 
-export default wrapper(props => {
+export default Utils.decorateWithMobX(props => {
     const size = props.size === 'medium' ? 'medium' : 'small';
     return (
         <div className = {`avatar-container avatar-${size}`}/>
