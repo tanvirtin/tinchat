@@ -22,4 +22,13 @@ export class AuthenticationService {
         const formData = this.parseFormData(form);
         return axios.post(`${restApiEndpoint}/register`, formData);
     }
+
+    static logout (token) {
+        const options = {
+            method: 'POST',
+            headers: { 'authorization': `Bearer ${token}` },
+            url: `${restApiEndpoint}/logout`,
+        };
+        return axios(options);
+    }
 };

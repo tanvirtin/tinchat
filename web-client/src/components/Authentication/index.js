@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import { AuthenticationService } from '../../services';
-import { observer, inject } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
 
 @inject('authentication')
 @observer

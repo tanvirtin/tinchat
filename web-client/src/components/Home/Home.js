@@ -19,7 +19,7 @@ export default Utils.decorateWithMobX(props => {
                     icon = 'setting'
                 >
                     <Dropdown.Menu>
-                        <Dropdown.Item text = {translations.getTranslation('logout')} />
+                        <Dropdown.Item onClick = {props.onLogout} text = {translations.getTranslation('logout')} />
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>
