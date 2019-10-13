@@ -20,7 +20,6 @@ export default Utils.decorateWithMobX(props => {
                         ? <Home />
                         : <Redirect to = '/login'/>
                 }
-                <Home />
             </Route>
             <Route path = "/">
                 {

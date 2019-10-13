@@ -3,7 +3,11 @@ import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
 import moment from 'moment';
+import { AuthenticationService } from '../../services';
+import { observer, inject } from 'mobx-react';
 
+@inject('authentication')
+@observer
 class HomeContainer extends Component {
     constructor (props) {
         super(props);
@@ -15,6 +19,15 @@ class HomeContainer extends Component {
                 left
             />,
         ] };
+    }
+    async onLogout () {
+        const { authentication } = this.props;
+        try {
+            await AuthenticationService.logout(authentication.token);
+            authentication.refreshToken();
+        } catch (err) {
+            throw err;
+        }
     }
     setMessage () {
         this.setState({ messages: this.state.messages }, () => {
@@ -49,6 +62,7 @@ class HomeContainer extends Component {
                 ]}
                 messages = {this.state.messages}
                 onSendMessage = {this.onSendMessage.bind(this)}
+                onLogout = {this.onLogout.bind(this)}
             />
         );
     }
