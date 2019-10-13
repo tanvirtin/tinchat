@@ -4,6 +4,7 @@ import {
 } from 'mobx';
 
 import Cookies from 'universal-cookie';
+import config from '../config.json';
 
 export class AuthenticationStore {
     // If any component's render depends on this attribute, then the component will instantly re-render.
@@ -25,7 +26,7 @@ export class AuthenticationStore {
         this.nonObservableToken = token;
         this.cookies.set('token', token, {
             path: '/',
-            maxAge: 60,
+            maxAge: config.cookieMaxAge,
         });
     }
 

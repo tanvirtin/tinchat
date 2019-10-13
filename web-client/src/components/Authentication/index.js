@@ -54,7 +54,7 @@ class Authentication extends Component {
             this.showNotification('Login successful!', () => {
                 setTimeout(() => {
                     this.props.history.push('/home');
-                }, 1000);
+                }, 700);
             });
         }
     }
