@@ -6,18 +6,21 @@ import Avatar from '../Avatar';
 import './styles.scss';
 
 export default Utils.decorateWithMobX(props => {
-    let { recentMessage } = props;
-    const maxMessageLength = 20;
-    if (recentMessage.length > maxMessageLength) {
-        recentMessage = `${recentMessage.substring(0, maxMessageLength)}...`;
+    let { recentMessage, name } = props;
+    const maxCharLength = 15;
+    if (recentMessage.length > maxCharLength) {
+        recentMessage = `${recentMessage.substring(0, maxCharLength)}...`;
+    }
+    if (name.length > maxCharLength) {
+        name = `${name.substring(0, maxCharLength)}...`;
     }
     return (
         <Row className = 'user-card-container'>
             <Col>
                 <div className = 'user-card'>
-                    <Avatar size = 'medium'/>
+                    <Avatar firstLetter = {props.name[0].toUpperCase()} size = 'medium'/>
                     <div className = 'user-card-text-group'>
-                        <h1> {props.username} </h1>
+                        <h1> {name} </h1>
                         <p> {recentMessage} </p>
                     </div>
                 </div>

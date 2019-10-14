@@ -38,8 +38,9 @@ export class UserService {
         }
         const userResponseObject = user.toResponseObject();
         const { token } = userResponseObject;
-        // We don't need to wait we want this to be asynchronous background process.
-        this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
+        // We don't need to wait we want this to be asynchronous background process,
+        // but to handle server errors it's best to use await here to handle unhandled promise errors.
+        await this.cacheManager.set(email, token, { ttl: process.env.JWT_EXPIRATION || 604800 });
         return userResponseObject;
     }
 
@@ -59,7 +60,7 @@ export class UserService {
         if (userIndexDocument) {
             delete userIndexDocument.token;
         }
-        this.searchService.index('user', userIndexDocument);
+        await this.searchService.index('user', userIndexDocument);
         return userResponseObject;
     }
 

@@ -1,13 +1,5 @@
 version: "3.2"
 services:
-  server:
-    image: tinchat:server
-    env_file:
-      - server/.env
-    environment:
-      - NODE_ENV=production
-    ports:
-      - 8000:8000
   db:
     image: postgres
     restart: unless-stopped
@@ -24,10 +16,13 @@ services:
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
-      - cluster.initial_master_nodes=elasticsearch
       - cluster.name=docker-cluster
+      - cluster.initial_master_nodes=elasticsearch
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
     ulimits:
       memlock:
         soft: -1

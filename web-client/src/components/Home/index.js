@@ -11,20 +11,20 @@ import { observer, inject } from 'mobx-react';
 class HomeContainer extends Component {
     constructor (props) {
         super(props);
-        this.state = { messages: [
-            <MessageCard
-                key = {Math.random()}
-                message = {'I am starting this conversation'}
-                timestamp = {moment().format('hh:mm a')}
-                left
-            />,
-        ] };
+        const firstName = 'test';
+        const lastName = 'test';
+        this.state = {
+            messages: [],
+            searchedUsers: [
+                <UserCard key = {0} name = {`${firstName} ${lastName}`} recentMessage = {'Some message is the best'}/>,
+            ],
+        };
     }
     async onLogout () {
         const { authentication } = this.props;
         try {
             await AuthenticationService.logout(authentication.token);
-            authentication.refreshToken();
+            authentication.refreshAuthentication();
         } catch (err) {
             throw err;
         }
@@ -55,11 +55,12 @@ class HomeContainer extends Component {
         }
     }
     render () {
+        const { authentication: { id, email, firstName, lastName } } = this.props;
         return (
             <Home
-                users = {[
-                    <UserCard key = {0} username = {'Tinman'} recentMessage = {'Some message is the best'}/>,
-                ]}
+                user = {{ id, email, firstName, lastName }}
+                recipient = {{ firstName: 'Tanvir' }}
+                searchedUsers = {this.state.searchedUsers}
                 messages = {this.state.messages}
                 onSendMessage = {this.onSendMessage.bind(this)}
                 onLogout = {this.onLogout.bind(this)}
