@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
+    padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e8e8e8;
     cursor: pointer;
@@ -16,7 +16,8 @@
 }
 
 .user-card-text-group {
-    margin-left: 30px;
+    margin-top: 15px;
+    margin-left: 20px;
 }
 
 .user-card-text-group h1 {

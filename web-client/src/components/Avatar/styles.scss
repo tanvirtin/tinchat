@@ -2,6 +2,11 @@
     border-radius: 100%;
     border: 1px solid #9e9e9e;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #dcf8c6;
+    color: black;
 }
 
 .avatar-small {

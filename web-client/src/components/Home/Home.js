@@ -7,58 +7,77 @@ import Avatar from '../Avatar';
 import './styles.scss';
 
 export default Utils.decorateWithMobX(props => {
-    const { translations } = props;
-    const chatSelected = true;
+    const {
+        translations,
+        user,
+        recipient,
+        selectedUsers,
+        messages,
+        onLogout,
+        onSendMessage,
+    } = props;
     return (
         <Container className = 'home-container'>
             <Row className = 'profile-tab user-profile-tab'>
-                <Col className = 'profile-avatar'> <Avatar/> </Col>
+                <Col className = 'profile-avatar'>
+                    <Avatar firstLetter = {user.firstName[0].toUpperCase()}/>
+                </Col>
                 <Dropdown
                     labeled
                     button
                     icon = 'setting'
                 >
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick = {props.onLogout} text = {translations.getTranslation('logout')} />
+                        <Dropdown.Item
+                            onClick = {onLogout}
+                            text = {translations.getTranslation('logout')}
+                        />
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>
             <Row className = 'row-container'>
 
                 <Col className = 'scrollable user-container' xs = {3}>
-                    <Row className = 'search'>
+                    <Row className = 'user-search'>
                         <Col>
-                            <Input
-                                size = 'mini'
-                                fluid
-                                icon = 'search'
+                            <Dropdown
+                                onSearchChange = {props.onSearchUserChange}
+                                onChange = {props.onSearchSelect}
                                 placeholder = {translations.getTranslation('searchPlaceholder')}
+                                fluid
+                                search
+                                selection
+                                value = {''}
+                                options = {props.userSearchResults}
+                                loading = {props.userSearchLoading}
                             />
                         </Col>
                     </Row>
-                    {props.users}
+                    {selectedUsers}
                 </Col>
                 <Col className = 'message-container' xs = {9}>
                     {
-                        chatSelected &&
+                        recipient &&
                             <Row className = 'profile-tab chat-profile-tab'>
-                                <Col> <Avatar/> </Col>
-                            </Row>
-                    }
-                    {
-                        chatSelected &&
-                            <Row className = 'scrollable messages'>
                                 <Col>
-                                    {props.messages}
+                                    <Avatar firstLetter = {recipient.firstName[0].toUpperCase()}/>
                                 </Col>
                             </Row>
                     }
                     {
-                        chatSelected &&
+                        recipient &&
+                            <Row className = 'scrollable messages'>
+                                <Col>
+                                    {messages}
+                                </Col>
+                            </Row>
+                    }
+                    {
+                        recipient &&
                             <Row className = 'send-message'>
                                 <Col>
                                     <Input
-                                        onKeyDown = {props.onSendMessage}
+                                        onKeyDown = {onSendMessage}
                                         className = 'message-input'
                                         size = 'mini'
                                         placeholder = {translations.getTranslation('typeMessagePlaceholder')}

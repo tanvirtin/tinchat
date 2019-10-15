@@ -2,7 +2,7 @@
 
 delete_es_indices() {
     echo 'Deleting all elasticsearch indices'
-    echo `curl -XDELETE localhost:9200/*`
+    echo `curl -XDELETE ${DOCKER_IP}:9200/*`
     echo 'DONE'
 }
 

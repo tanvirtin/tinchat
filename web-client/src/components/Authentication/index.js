@@ -34,15 +34,15 @@ class Authentication extends Component {
             }
         });
     }
-    storeToken (response) {
-        const { data: { token } } = response;
+    storeAuthentication (response) {
+        const { data } = response;
         const { authentication } = this.props;
-        authentication.storeToken(token);
+        authentication.storeAuthentication(data);
     }
     async authenticate (form) {
         if (this.props.register) {
             const response = await AuthenticationService.register(form);
-            this.storeToken(response);
+            this.storeAuthentication(response);
             this.showNotification('Registration successful!', () => {
                 setTimeout(() => {
                     this.props.history.push('/home');
@@ -50,7 +50,7 @@ class Authentication extends Component {
             });
         } else {
             const response = await AuthenticationService.login(form);
-            this.storeToken(response);
+            this.storeAuthentication(response);
             this.showNotification('Login successful!', () => {
                 setTimeout(() => {
                     this.props.history.push('/home');
