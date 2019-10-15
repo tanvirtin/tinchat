@@ -37,9 +37,9 @@ Chat Application built using NestJS, PSQL and ReactJS.
     - Creates a message (Protected)
   - GET /api/conversation
     - Retrieves all conversation between two users (Protected)
-  - GET /:index
+  - GET /search/:index
     - Retrieves all documents of a given index (Protected)
-  - POST /:index
+  - POST /search/:index
     - Retrives particular documents depending on the query provided (Protected)
 
 ### How to run:

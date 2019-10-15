@@ -11,7 +11,7 @@ export default Utils.decorateWithMobX(props => {
         translations,
         user,
         recipient,
-        searchedUsers,
+        selectedUsers,
         messages,
         onLogout,
         onSendMessage,
@@ -38,17 +38,22 @@ export default Utils.decorateWithMobX(props => {
             <Row className = 'row-container'>
 
                 <Col className = 'scrollable user-container' xs = {3}>
-                    <Row className = 'search'>
+                    <Row className = 'user-search'>
                         <Col>
-                            <Input
-                                size = 'mini'
-                                fluid
-                                icon = 'search'
+                            <Dropdown
+                                onSearchChange = {props.onSearchUserChange}
+                                onChange = {props.onSearchSelect}
                                 placeholder = {translations.getTranslation('searchPlaceholder')}
+                                fluid
+                                search
+                                selection
+                                value = {''}
+                                options = {props.userSearchResults}
+                                loading = {props.userSearchLoading}
                             />
                         </Col>
                     </Row>
-                    {searchedUsers}
+                    {selectedUsers}
                 </Col>
                 <Col className = 'message-container' xs = {9}>
                     {
