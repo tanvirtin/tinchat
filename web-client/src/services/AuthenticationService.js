@@ -1,7 +1,6 @@
-import { restApiEndpoint } from '../config.json';
-import axios from 'axios';
+import { Service } from './Service';
 
-export class AuthenticationService {
+export class AuthenticationService extends Service {
     static parseFormData (form) {
         const { elements } = form;
         const data = {};
@@ -15,20 +14,15 @@ export class AuthenticationService {
     }
     static login (form) {
         const formData = this.parseFormData(form);
-        return axios.post(`${restApiEndpoint}/login`, formData);
+        return this.post({ url: `login`, data: formData });
     }
 
     static register (form) {
         const formData = this.parseFormData(form);
-        return axios.post(`${restApiEndpoint}/register`, formData);
+        return this.post({ url: `register`, data: formData });
     }
 
     static logout (token) {
-        const options = {
-            method: 'POST',
-            headers: { 'authorization': `Bearer ${token}` },
-            url: `${restApiEndpoint}/logout`,
-        };
-        return axios(options);
+        return this.post({ url: 'logout', token });
     }
 };
