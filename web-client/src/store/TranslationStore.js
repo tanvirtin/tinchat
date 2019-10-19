@@ -6,9 +6,9 @@ import {
 import enCA from '../data/en-CA';
 import frCA from '../data/fr-CA';
 
-export class TranslationsStore {
+export class TranslationStore {
     @observable type = 'en-CA';
-    @observable translations = {
+    @observable translation = {
         'en-CA': enCA,
         'fr-CA': frCA,
     };
@@ -19,8 +19,8 @@ export class TranslationsStore {
 
     getTranslation (section, key) {
         let missingTranslation = key ? `?${section}-${key}?` : `?${section}?`;
-        if (section && key && this.translations[this.type] && this.translations[this.type][section] && this.translations[this.type][section][key]) {
-            const translation = this.translations[this.type][section][key];
+        if (section && key && this.translation[this.type] && this.translation[this.type][section] && this.translation[this.type][section][key]) {
+            const translation = this.translation[this.type][section][key];
             if (typeof translation === 'string') {
                 return translation;
             }
@@ -28,12 +28,12 @@ export class TranslationsStore {
             return missingTranslation;
         } else if (section) {
             key = section;
-            const translation = this.translations[this.type][key];
+            const translation = this.translation[this.type][key];
             if (translation && typeof translation === 'string') {
                 return translation;
             }
-            for (const sectionName in this.translations[this.type]) {
-                const section = this.translations[this.type][sectionName];
+            for (const sectionName in this.translation[this.type]) {
+                const section = this.translation[this.type][sectionName];
                 if (typeof section === 'object' && key in section && typeof section[key] === 'string') {
                     return section[key];
                 }

@@ -9,6 +9,6 @@ export default class {
     }
 
     static decorateWithMobX (component) {
-        return inject('authentication', 'translations')(observer(props => component(props)));
+        return inject('authentication', 'translation')(observer(props => component(props)));
     }
 }

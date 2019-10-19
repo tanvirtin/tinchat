@@ -1,4 +1,4 @@
-import { TranslationsStore } from './TranslationsStore';
+import { TranslationStore } from './TranslationStore';
 import { AuthenticationStore } from './AuthenticationStore';
 
-export { TranslationsStore, AuthenticationStore };
+export { TranslationStore, AuthenticationStore };
