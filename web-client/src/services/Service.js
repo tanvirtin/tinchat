@@ -2,9 +2,9 @@ import { restApiEndpoint } from '../config.json';
 import axios from 'axios';
 
 export class Service {
-    static post ({ url, data, token }) {
+    static request ({ method, url, data, token }) {
         const options = {
-            method: 'POST',
+            method,
             url: `${restApiEndpoint}/${url}`,
         };
         if (token) {
@@ -14,5 +14,11 @@ export class Service {
             options.data = data;
         }
         return axios(options);
+    }
+    static post ({ url, data, token }) {
+        return this.request({ url, data, token });
+    }
+    static get ({ url, data, token }) {
+        return this.request({ url, data, token });
     }
 }
