@@ -47,7 +47,7 @@ class HomeContainer extends Component {
     async onSearchSelect (e, { value: email }) {
         const user = this.state.userSearchResults[email];
         const selectedUsers = { ... this.state.selectedUsers };
-        let states = { recipient: user };
+        let states = { recipient: user, userSearchResults: {} };
         if (!(user.email in this.state.selectedUsers)) {
             selectedUsers[email] = user;
             states.selectedUsers = selectedUsers;
@@ -67,7 +67,8 @@ class HomeContainer extends Component {
     async setMessages (email, otherOptions) {
         const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
         const messages = [];
-        messagesResponse.forEach(messageResponse => {
+        for (let i = messagesResponse.length - 1; i >= 0; --i) {
+            const messageResponse = messagesResponse[i];
             this.messageRef = React.createRef();
             messages.push(
                 <MessageCard
@@ -79,7 +80,7 @@ class HomeContainer extends Component {
                     left = {messageResponse.from !== this.props.authentication.email}
                 />,
             );
-        });
+        }
         this.setMessagesState(messages, otherOptions);
     }
     async sendMessage (event) {
