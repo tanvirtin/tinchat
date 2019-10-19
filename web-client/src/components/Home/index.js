@@ -3,7 +3,7 @@ import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
 import moment from 'moment';
-import { AuthenticationService, UserSearchService } from '../../services';
+import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
 
 @inject('authentication')
@@ -44,43 +44,69 @@ class HomeContainer extends Component {
             });
         });
     }
-    onSearchSelect (e, { value: email }) {
+    async onSearchSelect (e, { value: email }) {
         const user = this.state.userSearchResults[email];
         const selectedUsers = { ... this.state.selectedUsers };
+        let states = { recipient: user };
         if (!(user.email in this.state.selectedUsers)) {
             selectedUsers[email] = user;
-            this.setState({
-                selectedUsers,
-                recipient: user,
-            });
+            states.selectedUsers = selectedUsers;
         }
+        this.setMessages(email, states);
     }
-    onUserClick (email) {
+    async onUserClick (email) {
         this.setState({ recipient: this.state.selectedUsers[email] });
+        this.setMessages(email);
     }
-    setMessage () {
-        this.setState({ messages: this.state.messages }, () => {
+    setMessagesState (messages, otherOptions) {
+        this.setState({ messages, ... otherOptions }, () => {
             // Scroll into view will use the scroll bar of the nearest parent which is scrollable.
-            this.messageRef.current.scrollIntoView();
+            this.messageRef && this.messageRef.current && this.messageRef.current.scrollIntoView();
         });
+    }
+    async setMessages (email, otherOptions) {
+        const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
+        const messages = [];
+        messagesResponse.forEach(messageResponse => {
+            this.messageRef = React.createRef();
+            messages.push(
+                <MessageCard
+                    messageRef = {this.messageRef}
+                    key = {Math.random()}
+                    message = {messageResponse.message}
+                    timestamp = {moment().format('hh:mm a')}
+                    right = {messageResponse.from === this.props.authentication.email}
+                    left = {messageResponse.from !== this.props.authentication.email}
+                />,
+            );
+        });
+        this.setMessagesState(messages, otherOptions);
+    }
+    async sendMessage (event) {
+        const { currentTarget: { value } } = event;
+        event.currentTarget.value = '';
+        const res = await MessageService.sendMessage({
+            to: this.state.recipient.email,
+            message: value,
+        }, this.props.authentication.token);
+        if (res.status >= 200) {
+            this.messageRef = React.createRef();
+            const messages = [... this.state.messages];
+            messages.push(
+                <MessageCard
+                    messageRef = {this.messageRef}
+                    key = {Math.random()}
+                    message = {value}
+                    timestamp = {moment().format('hh:mm a')}
+                    right
+                />,
+            );
+            this.setMessagesState(messages);
+        }
     }
     onSendMessage (event) {
         if (event.key === 'Enter') {
-            const { currentTarget: { value } } = event;
-            if (value) {
-                this.messageRef = React.createRef();
-                event.currentTarget.value = '';
-                this.state.messages.push(
-                    <MessageCard
-                        messageRef = {this.messageRef}
-                        key = {Math.random()}
-                        message = {value}
-                        timestamp = {moment().format('hh:mm a')}
-                        right
-                    />,
-                );
-                this.setMessage();
-            }
+            this.sendMessage(event);
         }
     }
     onCloseUserCard (email) {

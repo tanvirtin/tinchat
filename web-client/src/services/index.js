@@ -1,4 +1,5 @@
 import { AuthenticationService } from './AuthenticationService';
 import { UserSearchService } from './UserSearchService';
+import { MessageService } from './MessageService';
 
-export { AuthenticationService, UserSearchService };
+export { MessageService, AuthenticationService, UserSearchService };

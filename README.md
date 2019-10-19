@@ -25,27 +25,27 @@ Chat Application built using NestJS, PSQL and ReactJS.
         - Use caching that persists outside the instance of the server. For example: Redis.
 
 ### Endpoints:
-  - POST /register
+  - POST `'register'`
     - Registers a user and gives you back a jwt token
-  - POST /login
+  - POST `'login'`
     - Logs in the user and gives you back a jwt token
-  - POST /logout
+  - POST `'logout'`
     - Logs the user out and deletes the jwt token from server cache
-  - GET /api/users
+  - GET `'api/users'`
     - Retrieves all user (Protected)
-  - POST /api/message
+  - POST `'api/message'`
     - Creates a message (Protected)
-  - GET /api/conversation/:with/:page/:limit
+  - GET `'api/conversation/?with=${with}&page=${page}&limit=${limit}'`
     - Retrieves all conversation between two users (Protected)
-    - The query parameter `with` is the email of the user you are having the conversation with
-    - The query parameter `page` is a pagination variable to indicate which page of conversation you want to retrieve
-    - The query parameter `limit` is a pagination variable to indicate how many conversations you want in each page to have
-  - GET api/search/:index
+    - `with` is the email of the user you are having the conversation with
+    - `page` is a pagination variable to indicate which page of conversation you want to retrieve
+    - `limit` is a pagination variable to indicate how many conversations you want in each page to have
+  - GET `'api/search/:index'`
     - Retrieves all documents of a given index (Protected)
-    - The query parameter `index` is the name of the Elasticsearch index
-  - POST api/search/:index
+    - `index` is the name of the Elasticsearch index
+  - POST `'api/search/:index'`
     - Retrives particular documents depending on the query provided (Protected)
-    - The query parameter `index` is the name of the Elasticsearch index
+    - `index` is the name of the Elasticsearch index
 
 ### How to run:
   - `$ make docker-up`

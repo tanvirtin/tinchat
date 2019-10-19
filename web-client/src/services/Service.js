@@ -16,9 +16,9 @@ export class Service {
         return axios(options);
     }
     static post ({ url, data, token }) {
-        return this.request({ url, data, token });
+        return this.request({ method: 'POST', url, data, token });
     }
     static get ({ url, data, token }) {
-        return this.request({ url, data, token });
+        return this.request({ method: 'GET', url, data, token });
     }
 }
