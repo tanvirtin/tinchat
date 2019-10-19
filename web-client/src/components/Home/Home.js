@@ -8,7 +8,7 @@ import './styles.scss';
 
 export default Utils.decorateWithMobX(props => {
     const {
-        translations,
+        translation,
         user,
         recipient,
         selectedUsers,
@@ -30,7 +30,7 @@ export default Utils.decorateWithMobX(props => {
                     <Dropdown.Menu>
                         <Dropdown.Item
                             onClick = {onLogout}
-                            text = {translations.getTranslation('logout')}
+                            text = {translation.getTranslation('logout')}
                         />
                     </Dropdown.Menu>
                 </Dropdown>
@@ -43,7 +43,7 @@ export default Utils.decorateWithMobX(props => {
                             <Dropdown
                                 onSearchChange = {props.onSearchUserChange}
                                 onChange = {props.onSearchSelect}
-                                placeholder = {translations.getTranslation('searchPlaceholder')}
+                                placeholder = {translation.getTranslation('searchPlaceholder')}
                                 fluid
                                 search
                                 selection
@@ -80,7 +80,7 @@ export default Utils.decorateWithMobX(props => {
                                         onKeyDown = {onSendMessage}
                                         className = 'message-input'
                                         size = 'mini'
-                                        placeholder = {translations.getTranslation('typeMessagePlaceholder')}
+                                        placeholder = {translation.getTranslation('typeMessagePlaceholder')}
                                     />
                                 </Col>
                             </Row>

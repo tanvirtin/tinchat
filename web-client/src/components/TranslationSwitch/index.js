@@ -5,7 +5,7 @@ import {
     observer,
 } from 'mobx-react';
 
-@inject(store => ({ translations: store.translations }))
+@inject(store => ({ translation: store.translation }))
 @observer
 class TranslationSwitchContainer extends Component {
     constructor (props) {
@@ -14,21 +14,21 @@ class TranslationSwitchContainer extends Component {
     }
 
     handleChange () {
-        const { translations } = this.props;
+        const { translation } = this.props;
         this.setState({
             checked: !this.state.checked,
         }, () => {
             this.state.checked
-                ? translations.changeTranslations('fr-CA')
-                : translations.changeTranslations('en-CA');
+                ? translation.changeTranslations('fr-CA')
+                : translation.changeTranslations('en-CA');
         });
     }
 
     render () {
-        const { translations } = this.props;
+        const { translation } = this.props;
         return (
             <TranslationSwitch
-                label = { translations.type }
+                label = { translation.type }
                 checked = { this.state.checked }
                 handleChange = { this.handleChange.bind(this) }
             />

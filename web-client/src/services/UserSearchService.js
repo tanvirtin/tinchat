@@ -1,12 +1,10 @@
-import { restApiEndpoint } from '../config.json';
-import axios from 'axios';
+import { Service } from './Service';
 
-export class UserSearchService {
+export class UserSearchService extends Service {
     static async search (searchTerm, token) {
         const options = {
-            method: 'POST',
-            headers: { 'authorization': `Bearer ${token}` },
-            url: `${restApiEndpoint}/api/search/user`,
+            url: `api/search/user`,
+            token,
             data: {
                 'query': {
                     'bool': {
@@ -19,7 +17,7 @@ export class UserSearchService {
                 },
             },
         };
-        const response = await axios(options);
+        const response = await this.post(options);
         const { data: { body: { hits: { hits } } } } = response;
         const result = hits.map(result => result._source);
         return result;

@@ -35,12 +35,17 @@ Chat Application built using NestJS, PSQL and ReactJS.
     - Retrieves all user (Protected)
   - POST /api/message
     - Creates a message (Protected)
-  - GET /api/conversation
+  - GET /api/conversation/:with/:page/:limit
     - Retrieves all conversation between two users (Protected)
-  - GET /search/:index
+    - The query parameter `with` is the email of the user you are having the conversation with
+    - The query parameter `page` is a pagination variable to indicate which page of conversation you want to retrieve
+    - The query parameter `limit` is a pagination variable to indicate how many conversations you want in each page to have
+  - GET api/search/:index
     - Retrieves all documents of a given index (Protected)
-  - POST /search/:index
+    - The query parameter `index` is the name of the Elasticsearch index
+  - POST api/search/:index
     - Retrives particular documents depending on the query provided (Protected)
+    - The query parameter `index` is the name of the Elasticsearch index
 
 ### How to run:
   - `$ make docker-up`

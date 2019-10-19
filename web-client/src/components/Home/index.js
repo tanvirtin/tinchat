@@ -83,6 +83,18 @@ class HomeContainer extends Component {
             }
         }
     }
+    onCloseUserCard (email) {
+        const selectedUsers = { ... this.state.selectedUsers };
+        delete selectedUsers[email];
+        let recipient = this.state.recipient;
+        if (recipient && typeof recipient === 'object' && recipient.email === email) {
+            recipient = null;
+        }
+        this.setState({
+            selectedUsers,
+            recipient,
+        });
+    }
     render () {
         const { authentication: { id, email, firstName, lastName } } = this.props;
         return (
@@ -96,7 +108,8 @@ class HomeContainer extends Component {
                             onClick = {this.onUserClick.bind(this)}
                             key = {user.id}
                             user = {user}
-                            selected = {user.email === this.state.recipient.email}
+                            selected = {user.email === (this.state.recipient && this.state.recipient.email)}
+                            onCloseUserCard = {this.onCloseUserCard.bind(this)}
                         />
                     );
                 })}

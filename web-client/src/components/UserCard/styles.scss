@@ -29,3 +29,15 @@
     font-size: 11px;
     color: #a6a6a6;
 }
+
+.close-user-card {
+    margin-left: auto;
+    margin-top: 15px;
+    height: 15px;
+    width: 15px;
+}
+
+.close-user-card:hover {
+    transform: scale(1.25);
+    // width: 18px;
+}
