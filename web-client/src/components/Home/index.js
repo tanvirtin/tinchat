@@ -62,38 +62,49 @@ class HomeContainer extends Component {
             this.state.messages.length >= itemsPerPage
         ) {
             this.setState({ loaderActive: true }, async () => {
-                const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, itemsPerPage, this.props.authentication.token);
-                if (messagesResponse && messagesResponse.length === 0) {
-                    return this.setState({
-                        loaderActive: false,
-                        recipient: { ... this.state.recipient, allMessagesRetrieved: true },
-                    });
-                }
-                this.setState({ loaderActive: false }, () => {
-                    const stateMessages = [... this.state.messages];
-                    const messages = [];
-                    for (let i = messagesResponse.length - 1; i >= 0; --i) {
-                        const messageResponse = messagesResponse[i];
-                        this.messageRef = React.createRef();
-                        messages.push(
-                            <MessageCard
-                                messageRef = {this.messageRef}
-                                key = {Math.random()}
-                                message = {messageResponse.message}
-                                timestamp = {moment().format('hh:mm a')}
-                                right = {messageResponse.from === this.props.authentication.email}
-                                left = {messageResponse.from !== this.props.authentication.email}
-                            />,
-                        );
-                    }
-                    if (this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
-                        this.setState({
-                            messages: messages.concat(stateMessages),
-                        }, () => {
-                            this.messageRef.current.scrollIntoView();
+                try {
+                    const messagesResponse = await MessageService.getConversation(
+                        this.state.recipient.email,
+                        ++this.currentPage,
+                        itemsPerPage,
+                        this.props.authentication.token
+                    );
+                    if (messagesResponse && messagesResponse.length === 0) {
+                        return this.setState({
+                            loaderActive: false,
+                            recipient: { ... this.state.recipient, allMessagesRetrieved: true },
                         });
                     }
-                });
+                    this.setState({ loaderActive: false }, () => {
+                        const stateMessages = [... this.state.messages];
+                        const messages = [];
+                        for (let i = messagesResponse.length - 1; i >= 0; --i) {
+                            const messageResponse = messagesResponse[i];
+                            this.messageRef = React.createRef();
+                            messages.push(
+                                <MessageCard
+                                    messageRef = {this.messageRef}
+                                    key = {Math.random()}
+                                    message = {messageResponse.message}
+                                    timestamp = {moment().format('hh:mm a')}
+                                    right = {messageResponse.from === this.props.authentication.email}
+                                    left = {messageResponse.from !== this.props.authentication.email}
+                                />,
+                            );
+                        }
+                        if (this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
+                            this.setState({
+                                messages: messages.concat(stateMessages),
+                            }, () => {
+                                this.messageRef.current.scrollIntoView();
+                            });
+                        }
+                    });
+                } catch (err) {
+                    this.setState({ loaderActive: false }, () => {
+                        throw err;
+                    });
+                }
             });
         }
     }
@@ -101,16 +112,21 @@ class HomeContainer extends Component {
         const { currentTarget: { value } } = event;
         this.setState({ userSearchLoading: true }, async () => {
             const { authentication } = this.props;
-            const results = await UserSearchService.search(value, authentication.token);
-            const userSearchResults = {};
-            results.forEach(result => {
-                const { email } = result;
-                userSearchResults[email] = result;
-            });
-            this.setState({
-                userSearchLoading: false,
-                userSearchResults,
-            });
+            try {
+                const results = await UserSearchService.search(value, authentication.token);
+                const userSearchResults = {};
+                results.forEach(result => {
+                    const { email } = result;
+                    userSearchResults[email] = result;
+                });
+                this.setState({
+                    userSearchLoading: false,
+                    userSearchResults,
+                });
+            } catch (err) {
+                this.setState({ userSearchLoading: false });
+                throw err;
+            }
         });
     }
     async onSearchSelect (e, { value: email }) {
@@ -135,48 +151,62 @@ class HomeContainer extends Component {
     }
     setMessages (email, otherOptions) {
         this.setState({ loaderActive: true }, async () => {
-            const messagesResponse = await MessageService.getConversation(email, 1, itemsPerPage, this.props.authentication.token);
-            this.setState({ loaderActive: false }, () => {
-                this.currentPage = 1;
-                const messages = [];
-                for (let i = messagesResponse.length - 1; i >= 0; --i) {
-                    const messageResponse = messagesResponse[i];
-                    this.messageRef = React.createRef();
-                    messages.push(
-                        <MessageCard
-                            messageRef = {this.messageRef}
-                            key = {Math.random()}
-                            message = {messageResponse.message}
-                            timestamp = {moment().format('hh:mm a')}
-                            right = {messageResponse.from === this.props.authentication.email}
-                            left = {messageResponse.from !== this.props.authentication.email}
-                        />,
-                    );
-                }
-                this.setMessagesState(messages, otherOptions);
-            });
+            try {
+                const messagesResponse = await MessageService.getConversation(
+                    email, 1,
+                    itemsPerPage,
+                    this.props.authentication.token
+                );
+                this.setState({ loaderActive: false }, () => {
+                    this.currentPage = 1;
+                    const messages = [];
+                    for (let i = messagesResponse.length - 1; i >= 0; --i) {
+                        const messageResponse = messagesResponse[i];
+                        this.messageRef = React.createRef();
+                        messages.push(
+                            <MessageCard
+                                messageRef = {this.messageRef}
+                                key = {Math.random()}
+                                message = {messageResponse.message}
+                                timestamp = {moment().format('hh:mm a')}
+                                right = {messageResponse.from === this.props.authentication.email}
+                                left = {messageResponse.from !== this.props.authentication.email}
+                            />,
+                        );
+                    }
+                    this.setMessagesState(messages, otherOptions);
+                });
+            } catch (err) {
+                this.setState({ loaderActive: true }, () => {
+                    throw err;
+                });
+            }
         });
     }
     async sendMessage (event) {
         const { currentTarget: { value } } = event;
         event.currentTarget.value = '';
-        const res = await MessageService.sendMessage({
-            to: this.state.recipient.email,
-            message: value,
-        }, this.props.authentication.token);
-        if (res.status >= 200) {
-            this.messageRef = React.createRef();
-            const messages = [... this.state.messages];
-            messages.push(
-                <MessageCard
-                    messageRef = {this.messageRef}
-                    key = {Math.random()}
-                    message = {value}
-                    timestamp = {moment().format('hh:mm a')}
-                    right
-                />,
-            );
-            this.setMessagesState(messages);
+        try {
+            const res = await MessageService.sendMessage({
+                to: this.state.recipient.email,
+                message: value,
+            }, this.props.authentication.token);
+            if (res.status >= 200) {
+                this.messageRef = React.createRef();
+                const messages = [... this.state.messages];
+                messages.push(
+                    <MessageCard
+                        messageRef = {this.messageRef}
+                        key = {Math.random()}
+                        message = {value}
+                        timestamp = {moment().format('hh:mm a')}
+                        right
+                    />,
+                );
+                this.setMessagesState(messages);
+            }
+        } catch (err) {
+            throw err;
         }
     }
     onSendMessage (event) {
@@ -188,7 +218,11 @@ class HomeContainer extends Component {
         const selectedUsers = { ... this.state.selectedUsers };
         delete selectedUsers[email];
         let recipient = this.state.recipient;
-        if (recipient && typeof recipient === 'object' && recipient.email === email) {
+        if (
+            recipient &&
+            typeof recipient === 'object' &&
+            recipient.email === email
+        ) {
             recipient = null;
             this.currentPage = 0;
         }
