@@ -41,14 +41,14 @@ export default Utils.decorateWithMobX(props => {
                     <Row className = 'user-search'>
                         <Col>
                             <Dropdown
-                                onSearchChange = {props.onSearchUserChange}
-                                onChange = {props.onSearchSelect}
+                                onSearchChange = {props.onUserSearch}
+                                onChange = {props.onUserDropdownOptionSelect}
                                 placeholder = {translation.getTranslation('searchPlaceholder')}
                                 fluid
                                 search
                                 selection
                                 value = {''}
-                                options = {props.userSearchResults}
+                                options = {props.userDropdownOptions}
                                 loading = {props.userSearchLoading}
                             />
                         </Col>

@@ -16,7 +16,7 @@ class HomeContainer extends Component {
         this.currentPage = 0;
         this.state = {
             messages: [],
-            userSearchResults: {},
+            userDropdownOptions: {},
             selectedUsers: {},
             userSearchLoading: false,
             recipient: null,
@@ -108,36 +108,41 @@ class HomeContainer extends Component {
             });
         }
     }
-    onSearchUserChange (event) {
+    onUserSearch (event) {
         const { currentTarget: { value } } = event;
-        this.setState({ userSearchLoading: true }, async () => {
-            const { authentication } = this.props;
-            try {
-                const results = await UserSearchService.search(value, authentication.token);
-                const userSearchResults = {};
-                results.forEach(result => {
-                    const { email } = result;
-                    userSearchResults[email] = result;
-                });
-                this.setState({
-                    userSearchLoading: false,
-                    userSearchResults,
-                });
-            } catch (err) {
-                this.setState({ userSearchLoading: false });
-                throw err;
-            }
-        });
-    }
-    async onSearchSelect (e, { value: email }) {
-        const user = this.state.userSearchResults[email];
-        const selectedUsers = { ... this.state.selectedUsers };
-        let states = { recipient: user, userSearchResults: {} };
-        if (!(user.email in this.state.selectedUsers)) {
-            selectedUsers[email] = user;
-            states.selectedUsers = selectedUsers;
+        if (value) {
+            this.setState({ userSearchLoading: true }, async () => {
+                const { authentication } = this.props;
+                try {
+                    const results = await UserSearchService.search(value, authentication.token);
+                    const userDropdownOptions = {};
+                    results.forEach(result => {
+                        const { email } = result;
+                        userDropdownOptions[email] = result;
+                    });
+                    this.setState({
+                        userSearchLoading: false,
+                        userDropdownOptions,
+                    });
+                } catch (err) {
+                    this.setState({ userSearchLoading: false });
+                    throw err;
+                }
+            });
         }
-        this.setMessages(email, states);
+    }
+    async onUserDropdownOptionSelect (event, { value: email }) {
+        const { key } = event;
+        if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+            const user = this.state.userDropdownOptions[email];
+            const selectedUsers = { ... this.state.selectedUsers };
+            let states = { recipient: user, userDropdownOptions: {} };
+            if (!(user.email in this.state.selectedUsers)) {
+                selectedUsers[email] = user;
+                states.selectedUsers = selectedUsers;
+            }
+            this.setMessages(email, states);
+        }
     }
     async onUserClick (email) {
         this.setState({ recipient: this.state.selectedUsers[email] });
@@ -249,8 +254,8 @@ class HomeContainer extends Component {
                         />
                     );
                 })}
-                userSearchResults = {Object.keys(this.state.userSearchResults).map(key => {
-                    const result = this.state.userSearchResults[key];
+                userDropdownOptions = {Object.keys(this.state.userDropdownOptions).map(key => {
+                    const result = this.state.userDropdownOptions[key];
                     const { id, email, firstName, lastName } = result;
                     return {
                         key: id,
@@ -262,8 +267,8 @@ class HomeContainer extends Component {
                 messages = {this.state.messages}
                 onSendMessage = {this.onSendMessage.bind(this)}
                 onLogout = {this.onLogout.bind(this)}
-                onSearchUserChange = {this.onSearchUserChange.bind(this)}
-                onSearchSelect = {this.onSearchSelect.bind(this)}
+                onUserSearch = {this.onUserSearch.bind(this)}
+                onUserDropdownOptionSelect = {this.onUserDropdownOptionSelect.bind(this)}
                 onMessageScroll = {this.onMessageScroll.bind(this)}
                 loaderActive = {this.state.loaderActive}
             />
