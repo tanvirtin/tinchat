@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
+import socketIOClient from 'socket.io-client';
 import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
 import moment from 'moment';
-import { AuthenticationService, UserSearchService } from '../../services';
+import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
+import { socketEndpoint } from '../../config.json';
 
 @inject('authentication')
 @observer
 class HomeContainer extends Component {
     constructor (props) {
         super(props);
+        this.currentPage = 0;
+        this.allMessagesRetrieved = 0;
         this.state = {
             messages: [],
             userSearchResults: {},
@@ -18,6 +22,23 @@ class HomeContainer extends Component {
             userSearchLoading: false,
             recipient: null,
         };
+        this.socket = socketIOClient(socketEndpoint);
+        this.socket.on(this.props.authentication.token, messageResponse => {
+            if (messageResponse.from !== this.props.authentication.email) {
+                const messages = [... this.state.messages];
+                messages.push(
+                    <MessageCard
+                        messageRef = {this.messageRef}
+                        key = {Math.random()}
+                        message = {messageResponse.message}
+                        timestamp = {moment().format('hh:mm a')}
+                        right = {messageResponse.from === this.props.authentication.email}
+                        left = {messageResponse.from !== this.props.authentication.email}
+                    />,
+                );
+                this.setMessagesState(messages);
+            }
+        });
     }
     async onLogout () {
         const { authentication } = this.props;
@@ -26,6 +47,43 @@ class HomeContainer extends Component {
             authentication.refreshAuthentication();
         } catch (err) {
             throw err;
+        }
+    }
+    async onMessageScroll (event) {
+        const yCoordinate = event.target && event.target.scrollTop;
+        this.scrollHeight = event.target && event.target.scrollHeight;
+        let lastMessage;
+        // Once all messages has been reached no need to make a request to the server.
+        if (this.currentPage > 0 && yCoordinate === 0 && this.allMessagesRetrieved !== 2) {
+            const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, 10, this.props.authentication.token);
+            const stateMessages = [... this.state.messages];
+            const messages = [];
+            for (let i = messagesResponse.length - 1; i >= 0; --i) {
+                const messageResponse = messagesResponse[i];
+                if (i === 0) {
+                    lastMessage = messageResponse;
+                }
+                this.messageRef = React.createRef();
+                messages.push(
+                    <MessageCard
+                        messageRef = {this.messageRef}
+                        key = {Math.random()}
+                        message = {messageResponse.message}
+                        timestamp = {moment().format('hh:mm a')}
+                        right = {messageResponse.from === this.props.authentication.email}
+                        left = {messageResponse.from !== this.props.authentication.email}
+                    />,
+                );
+            }
+            if (lastMessage && lastMessage.id !== this.state.messages[0].id) {
+                // If for the second time we are finding.
+                ++this.allMessagesRetrieved;
+                this.setState({
+                    messages: messages.concat(stateMessages),
+                }, () => {
+                    this.messageRef.current.scrollIntoView();
+                });
+            }
         }
     }
     onSearchUserChange (event) {
@@ -44,43 +102,71 @@ class HomeContainer extends Component {
             });
         });
     }
-    onSearchSelect (e, { value: email }) {
+    async onSearchSelect (e, { value: email }) {
         const user = this.state.userSearchResults[email];
         const selectedUsers = { ... this.state.selectedUsers };
+        let states = { recipient: user, userSearchResults: {} };
         if (!(user.email in this.state.selectedUsers)) {
             selectedUsers[email] = user;
-            this.setState({
-                selectedUsers,
-                recipient: user,
-            });
+            states.selectedUsers = selectedUsers;
         }
+        this.setMessages(email, states);
     }
-    onUserClick (email) {
+    async onUserClick (email) {
         this.setState({ recipient: this.state.selectedUsers[email] });
+        this.setMessages(email);
     }
-    setMessage () {
-        this.setState({ messages: this.state.messages }, () => {
+    setMessagesState (messages, otherOptions) {
+        this.setState({ messages, ... otherOptions }, () => {
             // Scroll into view will use the scroll bar of the nearest parent which is scrollable.
-            this.messageRef.current.scrollIntoView();
+            this.messageRef && this.messageRef.current && this.messageRef.current.scrollIntoView();
         });
+    }
+    async setMessages (email, otherOptions) {
+        const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
+        this.currentPage = 1;
+        const messages = [];
+        for (let i = messagesResponse.length - 1; i >= 0; --i) {
+            const messageResponse = messagesResponse[i];
+            this.messageRef = React.createRef();
+            messages.push(
+                <MessageCard
+                    messageRef = {this.messageRef}
+                    key = {Math.random()}
+                    message = {messageResponse.message}
+                    timestamp = {moment().format('hh:mm a')}
+                    right = {messageResponse.from === this.props.authentication.email}
+                    left = {messageResponse.from !== this.props.authentication.email}
+                />,
+            );
+        }
+        this.setMessagesState(messages, otherOptions);
+    }
+    async sendMessage (event) {
+        const { currentTarget: { value } } = event;
+        event.currentTarget.value = '';
+        const res = await MessageService.sendMessage({
+            to: this.state.recipient.email,
+            message: value,
+        }, this.props.authentication.token);
+        if (res.status >= 200) {
+            this.messageRef = React.createRef();
+            const messages = [... this.state.messages];
+            messages.push(
+                <MessageCard
+                    messageRef = {this.messageRef}
+                    key = {Math.random()}
+                    message = {value}
+                    timestamp = {moment().format('hh:mm a')}
+                    right
+                />,
+            );
+            this.setMessagesState(messages);
+        }
     }
     onSendMessage (event) {
         if (event.key === 'Enter') {
-            const { currentTarget: { value } } = event;
-            if (value) {
-                this.messageRef = React.createRef();
-                event.currentTarget.value = '';
-                this.state.messages.push(
-                    <MessageCard
-                        messageRef = {this.messageRef}
-                        key = {Math.random()}
-                        message = {value}
-                        timestamp = {moment().format('hh:mm a')}
-                        right
-                    />,
-                );
-                this.setMessage();
-            }
+            this.sendMessage(event);
         }
     }
     onCloseUserCard (email) {
@@ -89,6 +175,7 @@ class HomeContainer extends Component {
         let recipient = this.state.recipient;
         if (recipient && typeof recipient === 'object' && recipient.email === email) {
             recipient = null;
+            this.currentPage = 0;
         }
         this.setState({
             selectedUsers,
@@ -128,6 +215,7 @@ class HomeContainer extends Component {
                 onLogout = {this.onLogout.bind(this)}
                 onSearchUserChange = {this.onSearchUserChange.bind(this)}
                 onSearchSelect = {this.onSearchSelect.bind(this)}
+                onMessageScroll = {this.onMessageScroll.bind(this)}
             />
         );
     }

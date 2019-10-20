@@ -66,7 +66,7 @@ export default Utils.decorateWithMobX(props => {
                     }
                     {
                         recipient &&
-                            <Row className = 'scrollable messages'>
+                            <Row onScroll = {props.onMessageScroll} className = 'scrollable messages'>
                                 <Col>
                                     {messages}
                                 </Col>
