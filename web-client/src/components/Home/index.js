@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import socketIOClient from 'socket.io-client';
 import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
 import moment from 'moment';
 import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
+import { socketEndpoint } from '../../config.json';
 
 @inject('authentication')
 @observer
@@ -18,6 +20,23 @@ class HomeContainer extends Component {
             userSearchLoading: false,
             recipient: null,
         };
+        this.socket = socketIOClient(socketEndpoint);
+        this.socket.on(this.props.authentication.token, messageResponse => {
+            if (messageResponse.from !== this.props.authentication.email) {
+                const messages = [... this.state.messages];
+                messages.push(
+                    <MessageCard
+                        messageRef = {this.messageRef}
+                        key = {Math.random()}
+                        message = {messageResponse.message}
+                        timestamp = {moment().format('hh:mm a')}
+                        right = {messageResponse.from === this.props.authentication.email}
+                        left = {messageResponse.from !== this.props.authentication.email}
+                    />,
+                );
+                this.setMessagesState(messages);
+            }
+        });
     }
     async onLogout () {
         const { authentication } = this.props;

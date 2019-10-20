@@ -1,4 +1,5 @@
 {
     "restApiEndpoint": "http://localhost:4000",
+    "socketEndpoint": "http://localhost:4001",
     "cookieMaxAge": 18000
 }
