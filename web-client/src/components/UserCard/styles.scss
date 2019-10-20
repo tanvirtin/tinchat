@@ -10,7 +10,7 @@
 }
 
 .user-card {
-    min-width: 200px;
+    min-width: 100px;
     display: flex;
     flex-direction: row;
 }
@@ -39,5 +39,4 @@
 
 .close-user-card:hover {
     transform: scale(1.25);
-    // width: 18px;
 }

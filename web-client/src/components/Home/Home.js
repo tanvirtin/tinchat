@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
 import Utils from '../../utils';
-import { Input, Dropdown } from 'semantic-ui-react';
+import { Loader, Input, Dropdown } from 'semantic-ui-react';
 import Avatar from '../Avatar';
 
 import './styles.scss';
@@ -68,6 +68,7 @@ export default Utils.decorateWithMobX(props => {
                         recipient &&
                             <Row onScroll = {props.onMessageScroll} className = 'scrollable messages'>
                                 <Col>
+                                    <Loader className = 'message-loader' active = {props.loaderActive}/>
                                     {messages}
                                 </Col>
                             </Row>

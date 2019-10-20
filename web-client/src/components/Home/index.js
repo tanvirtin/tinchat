@@ -14,13 +14,13 @@ class HomeContainer extends Component {
     constructor (props) {
         super(props);
         this.currentPage = 0;
-        this.allMessagesRetrieved = 0;
         this.state = {
             messages: [],
             userSearchResults: {},
             selectedUsers: {},
             userSearchLoading: false,
             recipient: null,
+            loaderActive: false,
         };
         this.socket = socketIOClient(socketEndpoint);
         this.socket.on(this.props.authentication.token, messageResponse => {
@@ -49,41 +49,45 @@ class HomeContainer extends Component {
             throw err;
         }
     }
-    async onMessageScroll (event) {
+    onMessageScroll (event) {
         const yCoordinate = event.target && event.target.scrollTop;
         this.scrollHeight = event.target && event.target.scrollHeight;
-        let lastMessage;
         // Once all messages has been reached no need to make a request to the server.
-        if (this.currentPage > 0 && yCoordinate === 0 && this.allMessagesRetrieved !== 2) {
-            const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, 10, this.props.authentication.token);
-            const stateMessages = [... this.state.messages];
-            const messages = [];
-            for (let i = messagesResponse.length - 1; i >= 0; --i) {
-                const messageResponse = messagesResponse[i];
-                if (i === 0) {
-                    lastMessage = messageResponse;
+        if (this.currentPage > 0 && yCoordinate === 0 && this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
+            this.setState({ loaderActive: true }, async () => {
+                const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, 10, this.props.authentication.token);
+                if (messagesResponse && messagesResponse.length === 0) {
+                    return this.setState({
+                        loaderActive: false,
+                        recipient: { ... this.state.recipient, allMessagesRetrieved: true },
+                    });
                 }
-                this.messageRef = React.createRef();
-                messages.push(
-                    <MessageCard
-                        messageRef = {this.messageRef}
-                        key = {Math.random()}
-                        message = {messageResponse.message}
-                        timestamp = {moment().format('hh:mm a')}
-                        right = {messageResponse.from === this.props.authentication.email}
-                        left = {messageResponse.from !== this.props.authentication.email}
-                    />,
-                );
-            }
-            if (lastMessage && lastMessage.id !== this.state.messages[0].id) {
-                // If for the second time we are finding.
-                ++this.allMessagesRetrieved;
-                this.setState({
-                    messages: messages.concat(stateMessages),
-                }, () => {
-                    this.messageRef.current.scrollIntoView();
+                this.setState({ loaderActive: false }, () => {
+                    const stateMessages = [... this.state.messages];
+                    const messages = [];
+                    for (let i = messagesResponse.length - 1; i >= 0; --i) {
+                        const messageResponse = messagesResponse[i];
+                        this.messageRef = React.createRef();
+                        messages.push(
+                            <MessageCard
+                                messageRef = {this.messageRef}
+                                key = {Math.random()}
+                                message = {messageResponse.message}
+                                timestamp = {moment().format('hh:mm a')}
+                                right = {messageResponse.from === this.props.authentication.email}
+                                left = {messageResponse.from !== this.props.authentication.email}
+                            />,
+                        );
+                    }
+                    if (this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
+                        this.setState({
+                            messages: messages.concat(stateMessages),
+                        }, () => {
+                            this.messageRef.current.scrollIntoView();
+                        });
+                    }
                 });
-            }
+            });
         }
     }
     onSearchUserChange (event) {
@@ -122,25 +126,29 @@ class HomeContainer extends Component {
             this.messageRef && this.messageRef.current && this.messageRef.current.scrollIntoView();
         });
     }
-    async setMessages (email, otherOptions) {
-        const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
-        this.currentPage = 1;
-        const messages = [];
-        for (let i = messagesResponse.length - 1; i >= 0; --i) {
-            const messageResponse = messagesResponse[i];
-            this.messageRef = React.createRef();
-            messages.push(
-                <MessageCard
-                    messageRef = {this.messageRef}
-                    key = {Math.random()}
-                    message = {messageResponse.message}
-                    timestamp = {moment().format('hh:mm a')}
-                    right = {messageResponse.from === this.props.authentication.email}
-                    left = {messageResponse.from !== this.props.authentication.email}
-                />,
-            );
-        }
-        this.setMessagesState(messages, otherOptions);
+    setMessages (email, otherOptions) {
+        this.setState({ loaderActive: true }, async () => {
+            const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
+            this.setState({ loaderActive: false }, () => {
+                this.currentPage = 1;
+                const messages = [];
+                for (let i = messagesResponse.length - 1; i >= 0; --i) {
+                    const messageResponse = messagesResponse[i];
+                    this.messageRef = React.createRef();
+                    messages.push(
+                        <MessageCard
+                            messageRef = {this.messageRef}
+                            key = {Math.random()}
+                            message = {messageResponse.message}
+                            timestamp = {moment().format('hh:mm a')}
+                            right = {messageResponse.from === this.props.authentication.email}
+                            left = {messageResponse.from !== this.props.authentication.email}
+                        />,
+                    );
+                }
+                this.setMessagesState(messages, otherOptions);
+            });
+        });
     }
     async sendMessage (event) {
         const { currentTarget: { value } } = event;
@@ -216,6 +224,7 @@ class HomeContainer extends Component {
                 onSearchUserChange = {this.onSearchUserChange.bind(this)}
                 onSearchSelect = {this.onSearchSelect.bind(this)}
                 onMessageScroll = {this.onMessageScroll.bind(this)}
+                loaderActive = {this.state.loaderActive}
             />
         );
     }
