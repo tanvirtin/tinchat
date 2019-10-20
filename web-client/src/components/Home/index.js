@@ -6,7 +6,7 @@ import MessageCard from '../MessageCard';
 import moment from 'moment';
 import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
-import { socketEndpoint } from '../../config.json';
+import { socketEndpoint, itemsPerPage } from '../../config.json';
 
 @inject('authentication')
 @observer
@@ -53,9 +53,16 @@ class HomeContainer extends Component {
         const yCoordinate = event.target && event.target.scrollTop;
         this.scrollHeight = event.target && event.target.scrollHeight;
         // Once all messages has been reached no need to make a request to the server.
-        if (this.currentPage > 0 && yCoordinate === 0 && this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
+        if (
+            this.currentPage > 0 &&
+            yCoordinate === 0 &&
+            this.state.recipient &&
+            !this.state.recipient.allMessagesRetrieved &&
+            this.state.messages &&
+            this.state.messages.length >= itemsPerPage
+        ) {
             this.setState({ loaderActive: true }, async () => {
-                const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, 10, this.props.authentication.token);
+                const messagesResponse = await MessageService.getConversation(this.state.recipient.email, ++this.currentPage, itemsPerPage, this.props.authentication.token);
                 if (messagesResponse && messagesResponse.length === 0) {
                     return this.setState({
                         loaderActive: false,
@@ -128,7 +135,7 @@ class HomeContainer extends Component {
     }
     setMessages (email, otherOptions) {
         this.setState({ loaderActive: true }, async () => {
-            const messagesResponse = await MessageService.getConversation(email, 1, 10, this.props.authentication.token);
+            const messagesResponse = await MessageService.getConversation(email, 1, itemsPerPage, this.props.authentication.token);
             this.setState({ loaderActive: false }, () => {
                 this.currentPage = 1;
                 const messages = [];
