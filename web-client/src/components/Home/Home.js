@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
 import Utils from '../../utils';
-import { Input, Dropdown } from 'semantic-ui-react';
+import { Loader, Input, Dropdown } from 'semantic-ui-react';
 import Avatar from '../Avatar';
 
 import './styles.scss';
@@ -41,14 +41,14 @@ export default Utils.decorateWithMobX(props => {
                     <Row className = 'user-search'>
                         <Col>
                             <Dropdown
-                                onSearchChange = {props.onSearchUserChange}
-                                onChange = {props.onSearchSelect}
+                                onSearchChange = {props.onUserSearch}
+                                onChange = {props.onUserDropdownOptionSelect}
                                 placeholder = {translation.getTranslation('searchPlaceholder')}
                                 fluid
                                 search
                                 selection
                                 value = {''}
-                                options = {props.userSearchResults}
+                                options = {props.userDropdownOptions}
                                 loading = {props.userSearchLoading}
                             />
                         </Col>
@@ -68,6 +68,7 @@ export default Utils.decorateWithMobX(props => {
                         recipient &&
                             <Row onScroll = {props.onMessageScroll} className = 'scrollable messages'>
                                 <Col>
+                                    <Loader className = 'message-loader' active = {props.loaderActive}/>
                                     {messages}
                                 </Col>
                             </Row>
