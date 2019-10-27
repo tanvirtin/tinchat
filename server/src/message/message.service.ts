@@ -2,7 +2,7 @@ import { Injectable, Inject, CACHE_MANAGER, HttpException, HttpStatus } from '@n
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './message.entity';
 import { Repository } from 'typeorm';
-import { MessageResponseDTO } from './dto';
+import { MessageResponseDTO, MessagesResponseDTO } from './dto';
 import { CreateMessageDTO } from './dto';
 import { AppGateway } from '../app.gateway';
 import { UserEntity } from '../user/user.entity';
@@ -56,9 +56,9 @@ export class MessageService {
         const messageResponseObject = message.toResponseObject();
         if (token) {
             await this.gateway.wss.emit(token, messageResponseObject);
-            message.delivered = true;
-            message.seen = false;
         }
+        message.delivered = true;
+        message.seen = false;
         await this.messageRepository.save(message);
         return messageResponseObject;
     }
@@ -69,7 +69,7 @@ export class MessageService {
      * @param user The current user who is making the request.
      * @param options Object containing page (current page of conversation) and limit (conversation per page) attributes.
      */
-    async getConversation(convoWith, user, options: IPaginationOptions): Promise<Pagination<MessageEntity>> {
+    async getConversation(convoWith, user, options: IPaginationOptions): Promise<MessagesResponseDTO> {
         const queryBuilder = this.messageRepository.createQueryBuilder('message');
         // All combination of from and to in of a message and when ordered by created date
         // gives you the entire conversation that belongs to two users.
@@ -83,16 +83,30 @@ export class MessageService {
                 .orderBy('message.createdDate', 'DESC');
         }
         const messages = await paginate<MessageEntity>(queryBuilder, options);
+        const unseenCount = await this.messageRepository.count({
+            from: convoWith,
+            to: user,
+            seen: false,
+        });
         // Whenever conversations are retrieved we need to update the seen flag in the database indicating that
         // the messages have been seen by the user receiving it, since a request is being made to retrieve them.
+        let seenCount = 0;
         if (messages.items) {
             for (const message of messages.items) {
                 if (!message.seen) {
+                    ++seenCount;
                     message.seen = true;
                     this.messageRepository.save(message);
                 }
             }
         }
-        return messages;
+        const { items, itemCount, pageCount } = messages;
+        const messagesResponseObject: MessagesResponseDTO = {
+            items,
+            itemCount,
+            pageCount,
+            unseenItems: unseenCount - seenCount,
+        };
+        return messagesResponseObject;
     }
 }
