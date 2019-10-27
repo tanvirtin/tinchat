@@ -4,6 +4,7 @@ import Home from './Home';
 import UserCard from '../UserCard';
 import MessageCard from '../MessageCard';
 import moment from 'moment';
+import { withRouter } from 'react-router-dom';
 import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
 import { socketEndpoint, itemsPerPage } from '../../config.json';
@@ -55,7 +56,11 @@ class HomeContainer extends Component {
             await AuthenticationService.logout(authentication.token);
             authentication.refreshAuthentication();
         } catch (err) {
-            throw err;
+            if (err && err.response && err.response.status === 403) {
+                this.props.history.push('/login');
+            } else if (err) {
+                throw err;
+            }
         }
     }
     onMessageScroll (event) {
@@ -109,7 +114,11 @@ class HomeContainer extends Component {
                     });
                 } catch (err) {
                     this.setState({ loaderActive: false }, () => {
-                        throw err;
+                        if (err && err.response && err.response.status === 403) {
+                            this.props.history.push('/login');
+                        } else if (err) {
+                            throw err;
+                        }
                     });
                 }
             });
@@ -132,8 +141,13 @@ class HomeContainer extends Component {
                         userDropdownOptions,
                     });
                 } catch (err) {
-                    this.setState({ userSearchLoading: false });
-                    throw err;
+                    this.setState({ userSearchLoading: false }, () => {
+                        if (err && err.response && err.response.status === 403) {
+                            this.props.history.push('/login');
+                        } else if (err) {
+                            throw err;
+                        }
+                    });
                 }
             });
         }
@@ -191,7 +205,11 @@ class HomeContainer extends Component {
                 });
             } catch (err) {
                 this.setState({ loaderActive: true }, () => {
-                    throw err;
+                    if (err && err.response && err.response.status === 403) {
+                        this.props.history.push('/login');
+                    } else if (err) {
+                        throw err;
+                    }
                 });
             }
         });
@@ -220,7 +238,11 @@ class HomeContainer extends Component {
                 this.setMessagesState(messages);
             }
         } catch (err) {
-            throw err;
+            if (err && err.response && err.response.status === 403) {
+                this.props.history.push('/login');
+            } else if (err) {
+                throw err;
+            }
         }
     }
     onSendMessage (event) {
@@ -285,4 +307,4 @@ class HomeContainer extends Component {
     }
 }
 
-export default HomeContainer;
+export default withRouter(HomeContainer);
