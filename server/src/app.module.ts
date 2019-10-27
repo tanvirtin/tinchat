@@ -18,7 +18,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
         CacheModule.register(),
         SearchModule,
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '../../', 'web-client/build'),
+            rootPath: join(__dirname, '../', 'public'),
         }),
     ],
     controllers: [AppController],
