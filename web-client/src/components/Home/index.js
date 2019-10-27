@@ -23,8 +23,17 @@ class HomeContainer extends Component {
             loaderActive: false,
         };
         this.socket = socketIOClient(socketEndpoint);
+        this.socketIOHandler();
+    }
+    socketIOHandler () {
         this.socket.on(this.props.authentication.token, messageResponse => {
-            if (messageResponse.from !== this.props.authentication.email) {
+            if (
+                this.state.recipient &&
+                (
+                    this.state.recipient.email === messageResponse.to ||
+                    this.state.recipient.email === messageResponse.from
+                )
+            ) {
                 const messages = [... this.state.messages];
                 messages.push(
                     <MessageCard
@@ -93,9 +102,7 @@ class HomeContainer extends Component {
                             );
                         }
                         if (this.state.recipient && !this.state.recipient.allMessagesRetrieved) {
-                            this.setState({
-                                messages: messages.concat(stateMessages),
-                            }, () => {
+                            this.setState({ messages: messages.concat(stateMessages) }, () => {
                                 this.messageRef.current.scrollIntoView();
                             });
                         }
@@ -158,7 +165,8 @@ class HomeContainer extends Component {
         this.setState({ loaderActive: true }, async () => {
             try {
                 const messagesResponse = await MessageService.getConversation(
-                    email, 1,
+                    email,
+                    1,
                     itemsPerPage,
                     this.props.authentication.token
                 );

@@ -6,7 +6,7 @@ import { MessageResponseDTO } from './dto';
 import { CreateMessageDTO } from './dto';
 import { AppGateway } from '../app.gateway';
 import { UserEntity } from '../user/user.entity';
-import {paginate, Pagination, IPaginationOptions} from 'nestjs-typeorm-paginate';
+import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
 
 /**
  * @class
@@ -22,6 +22,11 @@ export class MessageService {
         private gateway: AppGateway,
     ) {}
 
+    /**
+     * Checks if both sender and receiver exists in the system, to prevent invalid records from being created in the database.
+     * @param from email of the user who is sending the message.
+     * @param to email of the user who will be receiving the message.
+     */
     private async checkIfUsersExist(from: string, to: string): Promise<void> {
         if (!await this.userRepository.findOne({ where: { email: to }})) {
             throw new HttpException('Receiver of the message doesn\'t exist in the system', HttpStatus.BAD_REQUEST);
@@ -31,10 +36,18 @@ export class MessageService {
         }
     }
 
-    private async getRecipientToken(to: string): Promise<boolean> {
-        return this.cacheManager.get(to);
+    /**
+     * If a user is logged in the token will exist in the cache. This method retrieves that cached token.
+     * @param email of a user.
+     */
+    private async getRecipientToken(email: string): Promise<boolean> {
+        return this.cacheManager.get(email);
     }
 
+    /**
+     * Stores message sent by the client into the databse.
+     * @param data Message Request Data Transfer Object from the client.
+     */
     async createMessage(data: CreateMessageDTO): Promise<MessageResponseDTO> {
         const { to, from } = data;
         await this.checkIfUsersExist(from, to);
@@ -50,6 +63,12 @@ export class MessageService {
         return messageResponseObject;
     }
 
+    /**
+     * Retrieve messages via pagination, the messages that get retrieved also has their seen flag set to true and stored back into the database.
+     * @param convoWith The person with whom the user is having conversation with.
+     * @param user The current user who is making the request.
+     * @param options Object containing page (current page of conversation) and limit (conversation per page) attributes.
+     */
     async getConversation(convoWith, user, options: IPaginationOptions): Promise<Pagination<MessageEntity>> {
         const queryBuilder = this.messageRepository.createQueryBuilder('message');
         // All combination of from and to in of a message and when ordered by created date
@@ -63,6 +82,17 @@ export class MessageService {
                 .where('message.from = :from and message.to = :to', { from: user, to: convoWith })
                 .orderBy('message.createdDate', 'DESC');
         }
-        return paginate<MessageEntity>(queryBuilder, options);
+        const messages = await paginate<MessageEntity>(queryBuilder, options);
+        // Whenever conversations are retrieved we need to update the seen flag in the database indicating that
+        // the messages have been seen by the user receiving it, since a request is being made to retrieve them.
+        if (messages.items) {
+            for (const message of messages.items) {
+                if (!message.seen) {
+                    message.seen = true;
+                    this.messageRepository.save(message);
+                }
+            }
+        }
+        return messages;
     }
 }
