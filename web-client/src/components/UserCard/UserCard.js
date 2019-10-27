@@ -20,6 +20,11 @@ export default Utils.decorateWithMobX(props => {
                     <div className = 'user-card-text-group'>
                         <h1> {name} </h1>
                     </div>
+                    {props.unreadMessages > 0 &&
+                        <div className = 'count-bubble'>
+                            {props.unreadMessages}
+                        </div>
+                    }
                     <img onClick = {(event) => {
                         // It's important to prevent this inner div event from bubbling up to the
                         // onClick handler attached to the outer div.
