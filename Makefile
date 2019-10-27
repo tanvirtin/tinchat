@@ -26,6 +26,15 @@ delete-database-entries:
 delete-es-indices:
 	. server/script/delete_es_indices.sh
 
+create-web-client-build:
+	rm -rf server/public
+	rm -rf web-client/build
+	echo 'Removed old folders'
+	cd ./web-client/ && yarn build production
+	mv web-client/build server/public
+	echo 'Client build created and moved'
+	echo 'DONE'
+
 breakdown:
 	$(MAKE) delete-database-entries
 	$(MAKE) delete-es-indices
