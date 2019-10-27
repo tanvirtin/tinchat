@@ -22,10 +22,10 @@ class HomeContainer extends Component {
             recipient: null,
             loaderActive: false,
         };
-        this.socket = socketIOClient(socketEndpoint);
-        this.socketIOHandler();
+        this.attachSocketIOHandler();
     }
-    socketIOHandler () {
+    attachSocketIOHandler () {
+        this.socket = socketIOClient(socketEndpoint);
         this.socket.on(this.props.authentication.token, messageResponse => {
             if (
                 this.state.recipient &&
