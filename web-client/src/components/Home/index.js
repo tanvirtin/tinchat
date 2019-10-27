@@ -199,6 +199,7 @@ class HomeContainer extends Component {
     async sendMessage (event) {
         const { currentTarget: { value } } = event;
         event.currentTarget.value = '';
+        if (!value) return;
         try {
             const res = await MessageService.sendMessage({
                 to: this.state.recipient.email,
