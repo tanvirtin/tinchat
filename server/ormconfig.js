@@ -7,5 +7,5 @@ module.exports = {
     database: 'postgres',
     synchronize: true,
     logging: true,
-    entities: ['./src/**/*.entity.js', './dist/**/*.entity.js']
+    entities: [process.env.NODE_ENV === 'production' ? './src/**/*.entity.ts': undefined, './dist/**/*.entity.js']
 }
