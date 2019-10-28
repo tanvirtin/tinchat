@@ -15,6 +15,7 @@ class HomeContainer extends Component {
     constructor (props) {
         super(props);
         this.currentPage = 0;
+        this.unseenMessagesMap = {};
         this.state = {
             messages: [],
             userDropdownOptions: {},
@@ -29,11 +30,20 @@ class HomeContainer extends Component {
         this.socket = socketIOClient(socketEndpoint);
         this.socket.on(this.props.authentication.token, messageResponse => {
             if (
+                // Safety check
                 this.state.recipient &&
                 (
+                    // If message.to is directed to the recipient who is one of the user that was searched and a tab exists for.
                     this.state.recipient.email === messageResponse.to ||
-                    this.state.recipient.email === messageResponse.from
-                )
+                    // Or if the message is from the recipient for which a tab exists on the left and is sent to the current user.
+                    (
+                        this.state.recipient.email === messageResponse.from &&
+                        messageResponse.to === this.props.authentication.email
+                    )
+                ) &&
+                // And we are not dealing with the scenario where the recipient is the current user (User is texting themselves)
+                // This is to prevent duplicate messages from showing up in the UI, as sent message also puts a card in the ui.
+                this.state.recipient.email !== this.props.authentication.email
             ) {
                 const messages = [... this.state.messages];
                 messages.push(
@@ -47,6 +57,16 @@ class HomeContainer extends Component {
                     />,
                 );
                 this.setMessagesState(messages);
+            // If none of the other if statements are true, then we are in the scenario where the message sent via socket
+            // is not the recipient (selected user). In this case we show a bubble indicating that the user has an unread
+            // message from another user.
+            } else if (messageResponse.from !== this.props.authentication.email) {
+                if (messageResponse.from in this.unseenMessagesMap) {
+                    this.unseenMessagesMap[messageResponse.from] += 1;
+                } else {
+                    this.unseenMessagesMap[messageResponse.from] = 1;
+                }
+                this.forceUpdate();
             }
         });
     }
@@ -77,12 +97,14 @@ class HomeContainer extends Component {
         ) {
             this.setState({ loaderActive: true }, async () => {
                 try {
-                    const messagesResponse = await MessageService.getConversation(
+                    let messagesResponse = await MessageService.getConversation(
                         this.state.recipient.email,
                         ++this.currentPage,
                         itemsPerPage,
                         this.props.authentication.token
                     );
+                    this.unseenMessagesMap[this.state.recipient.email] = messagesResponse.unseenItems;
+                    messagesResponse = messagesResponse.items;
                     if (messagesResponse && messagesResponse.length === 0) {
                         return this.setState({
                             loaderActive: false,
@@ -178,12 +200,14 @@ class HomeContainer extends Component {
     setMessages (email, otherOptions) {
         this.setState({ loaderActive: true }, async () => {
             try {
-                const messagesResponse = await MessageService.getConversation(
+                let messagesResponse = await MessageService.getConversation(
                     email,
                     1,
                     itemsPerPage,
                     this.props.authentication.token
                 );
+                this.unseenMessagesMap[email] = messagesResponse.unseenItems;
+                messagesResponse = messagesResponse.items;
                 this.setState({ loaderActive: false }, () => {
                     this.currentPage = 1;
                     const messages = [];
@@ -275,6 +299,7 @@ class HomeContainer extends Component {
                 recipient = {this.state.recipient}
                 selectedUsers = {Object.keys(this.state.selectedUsers).map(key => {
                     const user = this.state.selectedUsers[key];
+                    const unseenMessages = this.unseenMessagesMap[user.email];
                     return (
                         <UserCard
                             onClick = {this.onUserClick.bind(this)}
@@ -282,6 +307,7 @@ class HomeContainer extends Component {
                             user = {user}
                             selected = {user.email === (this.state.recipient && this.state.recipient.email)}
                             onCloseUserCard = {this.onCloseUserCard.bind(this)}
+                            unseenMessages = {unseenMessages}
                         />
                     );
                 })}
