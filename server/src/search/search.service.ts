@@ -7,7 +7,7 @@ export class SearchService {
     private readonly client: Client;
 
     constructor() {
-        this.client = new Client({ node: process.env.ES_HOST || 'http://localhost:9200' });
+        this.client = new Client({ node: `http://${process.env.ES_HOST}:${process.env.ES_PORT}` || 'http://localhost:9200' });
     }
 
     async index(index: string, document: object): Promise<void> {

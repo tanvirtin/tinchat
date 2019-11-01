@@ -32,6 +32,7 @@ socket-io-test.html
 !.vscode/extensions.json
 
 # env
+.env
 /server/.env
 
 /server/dist

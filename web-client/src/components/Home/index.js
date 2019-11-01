@@ -7,7 +7,6 @@ import moment from 'moment';
 import { withRouter } from 'react-router-dom';
 import { MessageService, AuthenticationService, UserSearchService } from '../../services';
 import { observer, inject } from 'mobx-react';
-import { socketEndpoint, itemsPerPage } from '../../config.json';
 
 @inject('authentication')
 @observer
@@ -27,7 +26,9 @@ class HomeContainer extends Component {
         this.attachSocketIOHandler();
     }
     attachSocketIOHandler () {
-        this.socket = socketIOClient(socketEndpoint);
+        const { location: { protocol, hostname, port } } = window;
+        const host = `${protocol}//${hostname}:${parseInt(port, 10) + 1}`;
+        this.socket = socketIOClient(process.env.REACT_APP_SOCKET_ENDPOINT || host);
         this.socket.on(this.props.authentication.token, messageResponse => {
             if (
                 // Safety check
@@ -93,14 +94,14 @@ class HomeContainer extends Component {
             this.state.recipient &&
             !this.state.recipient.allMessagesRetrieved &&
             this.state.messages &&
-            this.state.messages.length >= itemsPerPage
+            this.state.messages.length >= (process.env.REACT_APP_ITEMS_PER_PAGE || 15)
         ) {
             this.setState({ loaderActive: true }, async () => {
                 try {
                     let messagesResponse = await MessageService.getConversation(
                         this.state.recipient.email,
                         ++this.currentPage,
-                        itemsPerPage,
+                        process.env.REACT_APP_ITEMS_PER_PAGE || 15,
                         this.props.authentication.token
                     );
                     this.unseenMessagesMap[this.state.recipient.email] = messagesResponse.unseenItems;
@@ -203,7 +204,7 @@ class HomeContainer extends Component {
                 let messagesResponse = await MessageService.getConversation(
                     email,
                     1,
-                    itemsPerPage,
+                    process.env.REACT_APP_ITEMS_PER_PAGE || 15,
                     this.props.authentication.token
                 );
                 this.unseenMessagesMap[email] = messagesResponse.unseenItems;

@@ -12,8 +12,7 @@ Chat Application built using NestJS, PSQL and ReactJS.
   - Messaging
     - Search
       - Clients can look up one another via first name, last name and email
-    - If the receiver is currently online, then the messages are delivered instantly which shows up in real time. (If jwt token for receiver exists in the cache)
-    - If the receiver is not currently online, the message is stored in a queue, of messages. These messages get delivered instantly when the client comes online. After messages have been delivered the queue is emptied out.
+    - Messaging is instant, if client is online they will receive the message in real time.
     - Similar to slack you can send message to yourself.
 
 ### Design Flaws
