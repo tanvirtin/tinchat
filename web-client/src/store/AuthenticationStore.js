@@ -4,7 +4,6 @@ import {
 } from 'mobx';
 
 import Cookies from 'universal-cookie';
-import config from '../config.json';
 
 export class AuthenticationStore {
     // If any component's render depends on this attribute, then the component will instantly re-render.
@@ -35,7 +34,7 @@ export class AuthenticationStore {
             this[key] = user[key];
             this.cookies.set(key, user[key], {
                 path: '/',
-                maxAge: config.cookieMaxAge,
+                maxAge: process.env.REACT_APP_COOKIE_MAX_AGE || 18000,
             });
         }
     }

@@ -1,8 +1,23 @@
-compile:
+build-server-image:
 	docker build -t tinchat-server .
 
-run:
+run-server-container:
 	docker run -d -t -p 8000:8000 tinchat-server
+
+create-web-client-build:
+	cp -r .env ./web-client/.env
+	rm -rf server/public
+	rm -rf web-client/build
+	echo 'Removed old folders'
+	cd ./web-client/ && yarn build production
+	mv web-client/build server/public
+	echo 'Client build created and moved'
+	echo 'DONE'
+
+deploy:
+	$(MAKE) create-web-client-build
+	$(MAKE) build-server-image
+	$(MAKE) docker-up
 
 docker-up:
 	docker-compose up -d
@@ -23,19 +38,10 @@ lint:
 	cd server/ && yarn lint
 
 delete-database-entries:
-	. server/script/delete_database_entries.sh
+	. script/delete_database_entries.sh
 
 delete-es-indices:
-	. server/script/delete_es_indices.sh
-
-create-web-client-build:
-	rm -rf server/public
-	rm -rf web-client/build
-	echo 'Removed old folders'
-	cd ./web-client/ && yarn build production
-	mv web-client/build server/public
-	echo 'Client build created and moved'
-	echo 'DONE'
+	. script/delete_es_indices.sh
 
 breakdown:
 	$(MAKE) delete-database-entries
