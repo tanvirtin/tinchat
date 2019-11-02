@@ -77,7 +77,7 @@ class HomeContainer extends Component {
             await AuthenticationService.logout(authentication.token);
             authentication.refreshAuthentication();
         } catch (err) {
-            if (err && err.response && err.response.status === 403) {
+            if (err && err.response && err.response.status > 201) {
                 this.props.history.push('/login');
             } else if (err) {
                 throw err;
@@ -137,7 +137,7 @@ class HomeContainer extends Component {
                     });
                 } catch (err) {
                     this.setState({ loaderActive: false }, () => {
-                        if (err && err.response && err.response.status === 403) {
+                        if (err && err.response && err.response.status > 201) {
                             this.props.history.push('/login');
                         } else if (err) {
                             throw err;
@@ -165,7 +165,7 @@ class HomeContainer extends Component {
                     });
                 } catch (err) {
                     this.setState({ userSearchLoading: false }, () => {
-                        if (err && err.response && err.response.status === 403) {
+                        if (err && err.response && err.response.status > 201) {
                             this.props.history.push('/login');
                         } else if (err) {
                             throw err;
@@ -230,7 +230,7 @@ class HomeContainer extends Component {
                 });
             } catch (err) {
                 this.setState({ loaderActive: true }, () => {
-                    if (err && err.response && err.response.status === 403) {
+                    if (err && err.response && err.response.status > 201) {
                         this.props.history.push('/login');
                     } else if (err) {
                         throw err;
@@ -263,7 +263,7 @@ class HomeContainer extends Component {
                 this.setMessagesState(messages);
             }
         } catch (err) {
-            if (err && err.response && err.response.status === 403) {
+            if (err && err.response && err.response.status > 201) {
                 this.props.history.push('/login');
             } else if (err) {
                 throw err;
