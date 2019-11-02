@@ -15,3 +15,4 @@ COPY /server/yarn.lock ./yarn.lock
 RUN yarn install
 
 EXPOSE 8000
+EXPOSE 8001
