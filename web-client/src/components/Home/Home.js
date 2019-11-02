@@ -36,7 +36,6 @@ export default Utils.decorateWithMobX(props => {
                 </Dropdown>
             </Row>
             <Row className = 'row-container'>
-
                 <Col className = 'scrollable user-container' xs = {3}>
                     <Row className = 'user-search'>
                         <Col>
