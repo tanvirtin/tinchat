@@ -29,14 +29,17 @@ services:
       - node.name=elasticsearch
       - cluster.name=docker-cluster
       - cluster.initial_master_nodes=elasticsearch
+      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - network.host=_eth0_
     ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
 volumes:
@@ -45,4 +48,6 @@ volumes:
   pgconf:
     driver: local
   pglog:
+    driver: local
+  esdata:
     driver: local
