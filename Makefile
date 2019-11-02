@@ -15,7 +15,6 @@ create-web-client-build:
 	echo 'DONE'
 
 deploy:
-	$(MAKE) create-web-client-build
 	$(MAKE) build-server-image
 	$(MAKE) docker-up
 
