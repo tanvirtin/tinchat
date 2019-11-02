@@ -52,7 +52,7 @@ class HomeContainer extends Component {
                         messageRef = {this.messageRef}
                         key = {Math.random()}
                         message = {messageResponse.message}
-                        timestamp = {moment().format('hh:mm a')}
+                        timestamp = {moment(messageResponse.createdDate).format('hh:mm a')}
                         right = {messageResponse.from === this.props.authentication.email}
                         left = {messageResponse.from !== this.props.authentication.email}
                     />,
@@ -123,7 +123,7 @@ class HomeContainer extends Component {
                                     messageRef = {this.messageRef}
                                     key = {Math.random()}
                                     message = {messageResponse.message}
-                                    timestamp = {moment().format('hh:mm a')}
+                                    timestamp = {moment(messageResponse.createdDate).format('hh:mm a')}
                                     right = {messageResponse.from === this.props.authentication.email}
                                     left = {messageResponse.from !== this.props.authentication.email}
                                 />,
@@ -220,7 +220,7 @@ class HomeContainer extends Component {
                                 messageRef = {this.messageRef}
                                 key = {Math.random()}
                                 message = {messageResponse.message}
-                                timestamp = {moment().format('hh:mm a')}
+                                timestamp = {moment(messageResponse.createdDate).format('hh:mm a')}
                                 right = {messageResponse.from === this.props.authentication.email}
                                 left = {messageResponse.from !== this.props.authentication.email}
                             />,
