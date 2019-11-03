@@ -1,6 +1,8 @@
 # Tinchat
 Chat Application built using NestJS, PSQL and ReactJS.
 
+![tinchat](https://user-images.githubusercontent.com/25164326/68090274-ce5b5e80-fe3f-11e9-93bb-0977fff37696.PNG)
+
 ## <3 NestJS
 
 ### Features
@@ -46,6 +48,9 @@ Chat Application built using NestJS, PSQL and ReactJS.
     - Retrives particular documents depending on the query provided (Protected)
     - `index` is the name of the Elasticsearch index
 
+### Dependencies:
+  - Docker
+  - Docker Compose
+
 ### How to run:
   - `$ make docker-up`
-  - `$ make start-server`
