@@ -54,13 +54,13 @@ Chat Application built using NestJS, PostgreSQL, Elasticsearch and ReactJS.
   - Docker Compose
 
 ### How to run:
-  You will need the following environment variables configured in order for compose to work. In your root directory create a .env file with the following environment variables filled out.
+  You will need the following environment variables configured in order for compose to work. In your root directory create a `.env` file with the following environment variables filled out.
   ```
     NODE_ENV=production
     JWT_EXPIRATION=604800	
     SERVER_PORT=8000
-    SOCKET_PORT=8001	
-    SECRET='zW}2ilF@rXX&L!]f:Oi=_%W-MK*V(llZe*;<A871MgWO@><wQfD;MAhuro^MZkV'	
+    SOCKET_PORT=8001
+    SECRET='<string of your choice>'	
     ES_TIMEOUT=3000	
     # 192.168.99.100 for wsl users
     ES_HOST=localhost
