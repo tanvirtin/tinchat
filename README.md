@@ -1,9 +1,9 @@
 # Tinchat
-Chat Application built using NestJS, PSQL and ReactJS.
+Chat Application built using NestJS, PostgreSQL, Elasticsearch and ReactJS.
 
 ![tinchat](https://user-images.githubusercontent.com/25164326/68090274-ce5b5e80-fe3f-11e9-93bb-0977fff37696.PNG)
 
-## <3 NestJS
+#### :heart: NestJS
 
 ### Features
   - User creation
@@ -11,19 +11,20 @@ Chat Application built using NestJS, PSQL and ReactJS.
     - Login.
     - Clients are verified via JSON web tokens.
     - A socket will only send messages to the receiver if their jwt token exists in cache.
+  - User search
+    - Clients can look up one another via first name, last name and email
+    - Users are indexed into Elasticsearch which makes them available for fast lookups.
   - Messaging
-    - Search
-      - Clients can look up one another via first name, last name and email
-    - Messaging is instant, if client is online they will receive the message in real time.
+    - Messaging is instant, if client is online they will receive the message in real time with the use of Socket.io.
     - Similar to slack you can send message to yourself.
 
-### Design Flaws
+### Notable Design Flaws
   - If someone gets hold the user's jwt token they can make requests to all routes only authorized to that user despite authenticating themselves.
     - Solution:
-        - Using sessions instead over relying purely on JWT validation.
+        - Using sessions instead of relying purely on JWT validation.
   - Everytime the server restarts all the users are logged out.
     - Solution:
-        - Use caching that persists outside the instance of the server. For example: Redis.
+        - Using caching that persists outside the instance of the server. For example: Redis.
 
 ### Endpoints:
   - POST `'register'`
