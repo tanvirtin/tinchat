@@ -1,17 +1,23 @@
 version: "3.2"
+
 services:
-  tinchat-server:
+
+  tinchat:
+    # You don't have to create the image manually if you provide the build which builds the image from the Dockerfile.
     build:
       context: .
       dockerfile: Dockerfile
-    image: tinchat-server
-    container_name: tinchat-server
+    image: tanvirtin/tinchat
+    container_name: tinchat
     restart: unless-stopped
     env_file: .env
+    # Exposing two ports one for REST api (8000) and the other for socket connection (8001).
     ports:
       - 8000:8000
       - 8001:8001
+    # Command the run after the container has been created.
     command: yarn start
+
   db:
     image: postgres
     restart: unless-stopped
@@ -22,6 +28,7 @@ services:
       - pglog:/var/log/postgresql
     ports:
       - "5432:5432"
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     restart: unless-stopped
@@ -40,6 +47,7 @@ services:
         hard: 65536
     ports:
       - 9200:9200
+
 volumes:
   pgdata:
     driver: local

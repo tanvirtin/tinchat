@@ -1,8 +1,8 @@
 build-server-image:
-	docker build -t tinchat-server .
+	docker build -t tanvirtin/tinchat .
 
 run-server-container:
-	docker run -d -t -p 8000:8000 tinchat-server
+	docker run -d -t -p 8000:8000 tanvirtin/tinchat
 
 create-web-client-build:
 	cp -r .env ./web-client/.env
@@ -14,27 +14,11 @@ create-web-client-build:
 	echo 'Client build created and moved'
 	echo 'DONE'
 
-deploy:
-	$(MAKE) build-server-image
-	$(MAKE) docker-up
-
 docker-up:
 	docker-compose up -d
 
 docker-down:
 	docker-compose down
-
-start-server-dev:
-	cd server/ && yarn start:dev
-
-start-server:
-	cd server/ && yarn start
-
-start-web-client:
-	cd web-client/ && yarn start
-
-lint:
-	cd server/ && yarn lint
 
 delete-database-entries:
 	. script/delete_database_entries.sh
@@ -45,3 +29,13 @@ delete-es-indices:
 breakdown:
 	$(MAKE) delete-database-entries
 	$(MAKE) delete-es-indices
+
+# Make commands for development process.
+start-server:
+	cd server/ && yarn start:dev
+
+start-web-client:
+	cd web-client/ && yarn start
+
+lint:
+	cd server/ && yarn lint
