@@ -56,7 +56,7 @@
 		"react": "^16.8.6",
 		"react-app-polyfill": "^1.0.1",
 		"react-bootstrap": "^1.0.0-beta.12",
-		"react-dev-utils": "^9.0.1",
+		"react-dev-utils": "^11.0.4",
 		"react-dom": "^16.8.6",
 		"react-router-dom": "^5.1.1",
 		"react-switch": "^5.0.1",
